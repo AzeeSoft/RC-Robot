@@ -12,7 +12,7 @@ class TitleWindowController extends WindowController_1.WindowController {
         });
     }
     onWindowCreated() {
-        console.log(__dirname);
+        // console.log(__dirname);
         this.window.loadFile("src/html/windows/titleWindow.html");
     }
     onWindowClosed() {

@@ -14,7 +14,7 @@ export class TitleWindowController extends WindowController {
     }
 
     onWindowCreated() {
-        console.log(__dirname);
+        // console.log(__dirname);
 
         this.window.loadFile("src/html/windows/titleWindow.html");
     }

@@ -4,7 +4,7 @@ const path = require('path');
 let mode = "development";
 
 let rendererBundles = [
-    ['windows/titleWindow.tsx', 'windows/titleWindow.js'],
+    ['windows/titleWindow/titlePageRenderer.tsx', 'windows/titleWindow.js'],
 ];
 
 /* let styleBundles = [
@@ -21,6 +21,9 @@ for (let rendererBundle in rendererBundles) {
             path: path.resolve(__dirname, 'src/js/renderer/bundles/'),
             filename: rendererBundles[rendererBundle][1],
         },
+        resolve: {
+            extensions: ['.tsx', '.ts', '.jsx', '.js']
+        },
         module: {
             rules: [
                 {
@@ -34,7 +37,7 @@ for (let rendererBundle in rendererBundles) {
                         "style-loader", // creates style nodes from JS strings
                         "css-loader", // translates CSS into CommonJS
                         "sass-loader" // compiles Sass to CSS
-                    ]
+                    ],
                 }
             ]
         }
