@@ -9,4 +9,4 @@ ReactDOM.render(
     <TitlePage />
   </App>,
   document.querySelector("#root")
-);
+); 
