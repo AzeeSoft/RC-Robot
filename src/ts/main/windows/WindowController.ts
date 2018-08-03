@@ -1,10 +1,9 @@
 import { BrowserWindow, BrowserWindowConstructorOptions } from 'electron';
 import { CommonTools } from '../../shared/CommonTools';
+import { Logger } from '../../shared/Logger';
 
 // A Global reference to a list of all controllers so that the windows don't get destroyed by GC. Also, it helps direct IPCMain events to the right window controller.
 let windowControllerDict : WindowController[] = [];
-let nextWindowControllerID: number = 0;
-let reusableWindowControllerIDs: number[] = [];
 
 export class WindowControllerOptions {
     windowOptions?: BrowserWindowConstructorOptions;
@@ -12,7 +11,7 @@ export class WindowControllerOptions {
 }
 
 export abstract class WindowController {
-    private windowControllerID: number;
+    private windowID: number;   // Same as the window's ID. Declrared again so that it can be referenced after the window is closed (useful to remove the controller from dictionary).
 
     private windowControllerOptions: WindowControllerOptions = { windowOptions: {}, shouldWaitForLoad: false };
     protected window: BrowserWindow = null;
@@ -28,15 +27,7 @@ export abstract class WindowController {
         this.windowControllerOptions = { ...this.windowControllerOptions, ...windowControllerOptions };
 
         this.createWindow();
-        
-        if (reusableWindowControllerIDs.length > 0) {
-            this.windowControllerID = reusableWindowControllerIDs.pop();
-        } else {
-            this.windowControllerID = nextWindowControllerID;
-            nextWindowControllerID++;
-        }
-
-        windowControllerDict[this.windowControllerID] = (this);
+        windowControllerDict[this.windowID] = (this);
     }
 
     private createWindow() {
@@ -44,10 +35,12 @@ export abstract class WindowController {
         windowOptions.show = false;
 
         this.window = new BrowserWindow(windowOptions);
+        this.windowID = this.window.id;
+
+        Logger.log("Window created with ID: " + this.windowID);
 
         if (this.windowControllerOptions.shouldWaitForLoad) {
             this.window.on('ready-to-show', () => {
-                this.window.webContents.send('windowControllerID', this.windowControllerID);
                 this.blockShow = false;
 
                 if (this.showRequestPending) {
@@ -60,10 +53,8 @@ export abstract class WindowController {
         }
 
         this.window.on('closed', () => {
+            windowControllerDict[this.windowID] = null;            
             this.window = null;
-
-            windowControllerDict[this.windowControllerID] = null;
-            reusableWindowControllerIDs.push(this.windowControllerID);
         });
     }
 

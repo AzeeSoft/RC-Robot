@@ -1,10 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const electron_1 = require("electron");
+const Logger_1 = require("../../shared/Logger");
 // A Global reference to a list of all controllers so that the windows don't get destroyed by GC. Also, it helps direct IPCMain events to the right window controller.
 let windowControllerDict = [];
-let nextWindowControllerID = 0;
-let reusableWindowControllerIDs = [];
 class WindowControllerOptions {
 }
 exports.WindowControllerOptions = WindowControllerOptions;
@@ -16,14 +15,7 @@ class WindowController {
         this.showRequestPending = false;
         this.windowControllerOptions = Object.assign({}, this.windowControllerOptions, windowControllerOptions);
         this.createWindow();
-        if (reusableWindowControllerIDs.length > 0) {
-            this.windowControllerID = reusableWindowControllerIDs.pop();
-        }
-        else {
-            this.windowControllerID = nextWindowControllerID;
-            nextWindowControllerID++;
-        }
-        windowControllerDict[this.windowControllerID] = (this);
+        windowControllerDict[this.windowID] = (this);
     }
     static getWindowController(windowControllerID) {
         return windowControllerDict[windowControllerID];
@@ -32,9 +24,10 @@ class WindowController {
         let windowOptions = this.windowControllerOptions.windowOptions;
         windowOptions.show = false;
         this.window = new electron_1.BrowserWindow(windowOptions);
+        this.windowID = this.window.id;
+        Logger_1.Logger.log("Window created with ID: " + this.windowID);
         if (this.windowControllerOptions.shouldWaitForLoad) {
             this.window.on('ready-to-show', () => {
-                this.window.webContents.send('windowControllerID', this.windowControllerID);
                 this.blockShow = false;
                 if (this.showRequestPending) {
                     this.showWindow();
@@ -46,9 +39,8 @@ class WindowController {
             this.blockShow = false;
         }
         this.window.on('closed', () => {
+            windowControllerDict[this.windowID] = null;
             this.window = null;
-            windowControllerDict[this.windowControllerID] = null;
-            reusableWindowControllerIDs.push(this.windowControllerID);
         });
     }
     showWindow() {

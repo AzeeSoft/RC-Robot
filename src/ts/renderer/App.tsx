@@ -1,4 +1,4 @@
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, remote } from 'electron';
 
 import * as React from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -13,32 +13,10 @@ const theme = createMuiTheme({
     }
 });
 
-class WindowConnection {
-    public controllerID: number;
-
-    public listenForWindowControllerID() {
-        ipcRenderer.on('windowControllerID', (event, ...args: any[]) => {
-            Logger.log(args);
-            windowConnection.controllerID = args[0];
-        });
-    }
-    
-    public sendDataToWindow(channel: string, ...args: any[]) {
-        if (this.controllerID !== null) {
-            ipcRenderer.send('windowData', windowConnection.controllerID, channel, args);
-        } else {
-            
-        }
-    }
-}
-
-const windowConnection: WindowConnection = new WindowConnection();
-
 export class App extends React.Component {
 
     constructor(props: Readonly<{}>) {
         super(props);
-        windowConnection.listenForWindowControllerID();
     }
 
     render() {
@@ -52,5 +30,13 @@ export class App extends React.Component {
         );
     }
 }
+
+class WindowConnection {    
+    public sendDataToWindow(channel: string, ...args: any[]) {
+        ipcRenderer.send('windowData', remote.getCurrentWindow().id, channel, args);
+    }
+}
+
+const windowConnection: WindowConnection = new WindowConnection();
 
 export { windowConnection };
