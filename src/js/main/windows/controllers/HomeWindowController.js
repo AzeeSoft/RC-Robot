@@ -22,10 +22,11 @@ class HomeWindowController extends WindowController_1.WindowController {
         Logger_1.Logger.log("Character: " + ch);
         Logger_1.Logger.log("Modifier: " + modifier);
     }
-    onRendererDataReceived(channel, event, ...args) {
+    onRendererDataReceived(channel, event, data) {
         Logger_1.Logger.log("Channel: " + channel);
         Logger_1.Logger.log("Event: " + event);
-        Logger_1.Logger.log("Data: " + args);
+        Logger_1.Logger.log("Data: ");
+        Logger_1.Logger.log(data);
     }
 }
 exports.HomeWindowController = HomeWindowController;

@@ -33,7 +33,7 @@ export class TitleWindowController extends WindowController {
         homeWindowController.showWindow();
     }
 
-    public onRendererDataReceived(channel: string, event: any, ...args: any[]) {
+    public onRendererDataReceived(channel: string, event: any, data: any) {
         
     }
 }

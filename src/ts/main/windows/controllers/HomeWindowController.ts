@@ -30,9 +30,10 @@ export class HomeWindowController extends WindowController {
         Logger.log("Modifier: " + modifier);
     }
     
-    public onRendererDataReceived(channel: string, event: any, ...args: any[]) {
+    public onRendererDataReceived(channel: string, event: any, data: any) {
         Logger.log("Channel: " + channel);
         Logger.log("Event: " + event);
-        Logger.log("Data: " + args);
+        Logger.log("Data: ");
+        Logger.log(data);
     }
 }

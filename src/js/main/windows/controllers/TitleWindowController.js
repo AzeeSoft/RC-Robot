@@ -26,7 +26,7 @@ class TitleWindowController extends WindowController_1.WindowController {
         let homeWindowController = new HomeWindowController_1.HomeWindowController();
         homeWindowController.showWindow();
     }
-    onRendererDataReceived(channel, event, ...args) {
+    onRendererDataReceived(channel, event, data) {
     }
 }
 exports.TitleWindowController = TitleWindowController;

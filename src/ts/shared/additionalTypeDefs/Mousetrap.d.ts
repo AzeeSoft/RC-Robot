@@ -1,3 +1,3 @@
 interface MousetrapStatic {
-    handleKey(ch, modifier, e): void; 
+    originalMousetrapHandleKey: (ch, modifier, e) => any;
 }

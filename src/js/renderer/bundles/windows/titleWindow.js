@@ -5923,7 +5923,7 @@ eval("\nvar content = __webpack_require__(/*! !../../../node_modules/css-loader!
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("\r\nObject.defineProperty(exports, \"__esModule\", { value: true });\r\nconst electron_1 = __webpack_require__(/*! electron */ \"electron\");\r\nconst React = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\r\nconst CssBaseline_1 = __webpack_require__(/*! @material-ui/core/CssBaseline */ \"./node_modules/@material-ui/core/CssBaseline/index.js\");\r\nconst styles_1 = __webpack_require__(/*! @material-ui/core/styles */ \"./node_modules/@material-ui/core/styles/index.js\");\r\nconst colors_1 = __webpack_require__(/*! @material-ui/core/colors */ \"./node_modules/@material-ui/core/colors/index.js\");\r\nconst theme = styles_1.createMuiTheme({\r\n    palette: {\r\n        primary: colors_1.teal,\r\n        secondary: colors_1.green,\r\n    }\r\n});\r\nclass App extends React.Component {\r\n    constructor(props) {\r\n        super(props);\r\n    }\r\n    render() {\r\n        return (React.createElement(styles_1.MuiThemeProvider, { theme: theme },\r\n            React.createElement(React.Fragment, null,\r\n                React.createElement(CssBaseline_1.default, null),\r\n                this.props.children)));\r\n    }\r\n}\r\nexports.App = App;\r\nclass WindowConnection {\r\n    sendDataToWindow(channel, ...args) {\r\n        electron_1.ipcRenderer.send('windowData', electron_1.remote.getCurrentWindow().id, channel, args);\r\n    }\r\n}\r\nconst windowConnection = new WindowConnection();\r\nexports.windowConnection = windowConnection;\r\n\n\n//# sourceURL=webpack:///./src/ts/renderer/App.tsx?");
+eval("\r\nObject.defineProperty(exports, \"__esModule\", { value: true });\r\nconst electron_1 = __webpack_require__(/*! electron */ \"electron\");\r\nconst React = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\r\nconst CssBaseline_1 = __webpack_require__(/*! @material-ui/core/CssBaseline */ \"./node_modules/@material-ui/core/CssBaseline/index.js\");\r\nconst styles_1 = __webpack_require__(/*! @material-ui/core/styles */ \"./node_modules/@material-ui/core/styles/index.js\");\r\nconst colors_1 = __webpack_require__(/*! @material-ui/core/colors */ \"./node_modules/@material-ui/core/colors/index.js\");\r\nconst Logger_1 = __webpack_require__(/*! ../shared/Logger */ \"./src/ts/shared/Logger.ts\");\r\nconst theme = styles_1.createMuiTheme({\r\n    palette: {\r\n        primary: colors_1.teal,\r\n        secondary: colors_1.green,\r\n    }\r\n});\r\nclass App extends React.Component {\r\n    constructor(props) {\r\n        super(props);\r\n    }\r\n    render() {\r\n        return (React.createElement(styles_1.MuiThemeProvider, { theme: theme },\r\n            React.createElement(React.Fragment, null,\r\n                React.createElement(CssBaseline_1.default, null),\r\n                this.props.children)));\r\n    }\r\n}\r\nexports.App = App;\r\nclass WindowConnection {\r\n    sendDataToWindow(channel, data) {\r\n        Logger_1.Logger.log(data);\r\n        electron_1.ipcRenderer.send('windowData', electron_1.remote.getCurrentWindow().id, channel, data);\r\n    }\r\n}\r\nconst windowConnection = new WindowConnection();\r\nexports.windowConnection = windowConnection;\r\n\n\n//# sourceURL=webpack:///./src/ts/renderer/App.tsx?");
 
 /***/ }),
 
@@ -5948,6 +5948,18 @@ eval("\r\nObject.defineProperty(exports, \"__esModule\", { value: true });\r\nco
 
 "use strict";
 eval("\r\nObject.defineProperty(exports, \"__esModule\", { value: true });\r\nconst React = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\r\nconst ReactDOM = __webpack_require__(/*! react-dom */ \"./node_modules/react-dom/index.js\");\r\nconst App_1 = __webpack_require__(/*! ../../App */ \"./src/ts/renderer/App.tsx\");\r\nconst TitlePage_1 = __webpack_require__(/*! ./TitlePage */ \"./src/ts/renderer/windows/titleWindow/TitlePage.tsx\");\r\nReactDOM.render(React.createElement(App_1.App, null,\r\n    React.createElement(TitlePage_1.TitlePage, null)), document.querySelector(\"#root\"));\r\n\n\n//# sourceURL=webpack:///./src/ts/renderer/windows/titleWindow/titlePageRenderer.tsx?");
+
+/***/ }),
+
+/***/ "./src/ts/shared/Logger.ts":
+/*!*********************************!*\
+  !*** ./src/ts/shared/Logger.ts ***!
+  \*********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+eval("\r\nObject.defineProperty(exports, \"__esModule\", { value: true });\r\nclass Logger {\r\n    static log(message) {\r\n        console.log(message);\r\n    }\r\n}\r\nexports.Logger = Logger;\r\n\n\n//# sourceURL=webpack:///./src/ts/shared/Logger.ts?");
 
 /***/ }),
 

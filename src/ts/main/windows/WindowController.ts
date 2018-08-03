@@ -71,5 +71,5 @@ export abstract class WindowController {
         return this.window;
     }
 
-    public abstract onRendererDataReceived(channel: string, event: any, ...args: any[]);
+    public abstract onRendererDataReceived(channel: string, event: any, data: any);
 }

@@ -15,11 +15,10 @@ app.on('window-all-closed', () => {
 
 ipcMain.on('windowData', (event, ...args: any[]) => {
     // Logger.log(event);
-    Logger.log(args);
+    // Logger.log(args);
 
     let windowControllerId = args[0];
     let channel = args[1];
-
-    let subArgs = args.slice(2);
-    WindowController.getWindowController(windowControllerId).onRendererDataReceived(channel, event, subArgs);
+    let data = args[2];
+    WindowController.getWindowController(windowControllerId).onRendererDataReceived(channel, event, data);
 });
