@@ -1,7 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const WindowController_1 = require("../WindowController");
-const InitializationPeriod = 3000;
+const HomeWindowController_1 = require("./HomeWindowController");
+const InitializationPeriod = 0;
+// const InitializationPeriod = 3000;
 class TitleWindowController extends WindowController_1.WindowController {
     constructor() {
         super({
@@ -11,18 +13,20 @@ class TitleWindowController extends WindowController_1.WindowController {
             },
             shouldWaitForLoad: true
         });
-    }
-    onWindowCreated() {
-        // console.log(__dirname);
         this.window.setMenuBarVisibility(false);
         this.window.loadFile("src/html/windows/titleWindow.html");
         this.window.on('ready-to-show', () => {
             setTimeout(() => {
+                this.createHomeWindow();
                 this.window.close();
             }, InitializationPeriod);
         });
     }
-    onWindowClosed() {
+    createHomeWindow() {
+        let homeWindowController = new HomeWindowController_1.HomeWindowController();
+        homeWindowController.showWindow();
+    }
+    onRendererDataReceived(channel, event, ...args) {
     }
 }
 exports.TitleWindowController = TitleWindowController;

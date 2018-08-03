@@ -21,6 +21,7 @@
     "@material-ui/icons": "^1.1.0",
     "@types/react": "^16.4.6",
     "@types/react-dom": "^16.0.6",
+    "@types/serialport": "^6.0.4",
     "autoprefixer": "^8.6.5",
     "css-loader": "^1.0.0",
     "electron": "^2.0.5",
@@ -40,7 +41,10 @@
     "webpack-cli": "^3.0.8"
   },
   "dependencies": {
+    "@types/mousetrap": "^1.6.0",
     "hoek": "^5.0.3",
+    "keypress": "^0.2.1",
+    "mousetrap": "^1.6.2",
     "serialport": "^6.2.2"
   }
 }

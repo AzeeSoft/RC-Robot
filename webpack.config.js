@@ -5,6 +5,7 @@ let mode = "development";
 
 let rendererBundles = [
     ['windows/titleWindow/titlePageRenderer.tsx', 'windows/titleWindow.js'],
+    ['windows/homeWindow/homePageRenderer.tsx', 'windows/homeWindow.js'],
 ];
 
 /* let styleBundles = [
@@ -40,7 +41,8 @@ for (let rendererBundle in rendererBundles) {
                     ],
                 }
             ]
-        }
+        },
+        target: 'electron-renderer',
     });
 }
 
