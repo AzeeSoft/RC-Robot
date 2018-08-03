@@ -1,7 +1,7 @@
 import { ArduinoController } from '../../tools/arduino/ArduinoController';
 import { SimpleDrivingComponent } from './components/driving/SimpleDrivingComponent';
 import { RCDataReceiver } from './components/rc/RCDataReceiver';
-import { RCDataProcessor } from './components/rc/RCDataProcessor';
+import { RCDataProcessor, RCData } from './components/rc/RCDataProcessor';
 import { LocalRCDataReceiver } from './components/rc/local/LocalRCDataReceiver';
 
 export class Robot {
@@ -20,10 +20,12 @@ export class Robot {
         this.arduinoController = new ArduinoController();
         this.simpleDrivingComponent = new SimpleDrivingComponent(this.arduinoController);
 
-        this.rcDataReceiver.setDataReceivedCallback(this.rcDataProcessor.onRCDataReceived);
+        this.rcDataReceiver.setDataReceivedCallback((data) => {
+            this.rcDataProcessor.onRCDataReceived(data as RCData);
+        });
     }
 
-    public connectToArduino(portPath: string, onSucess: () => void, onFailure: (error: Error) => {}) {
+    public connectToArduino(portPath: string, onSucess: () => void, onFailure: (error: Error) => void) {
         this.arduinoController.setPortPath(portPath);
         this.arduinoController.connect(onSucess, onFailure);
     }

@@ -1,5 +1,3 @@
-/// <reference path="../../../shared/additionalTypeDefs/mousetrap.d.ts"/>
-
 import { ipcRenderer } from 'electron';
 
 import * as React from 'react';
@@ -13,8 +11,6 @@ import { Logger } from '../../../shared/Logger';
 import { windowConnection } from '../../App';
 
 export class HomePage extends React.Component {
-
-    originalMousetrapHandleKeyFunction: (ch, modifier, e) => void;
 
     constructor(props: Readonly<{}>) {
         super(props);
@@ -30,12 +26,12 @@ export class HomePage extends React.Component {
     }
 
     listenToKeyboardEvents() {          
-        Mousetrap.prototype.handleKey = function (ch, modifier, e) {   
+        Mousetrap.prototype.handleKey = function (ch, modifiers, e) {   
             Logger.log(e);
 
-            windowConnection.sendDataToWindow('handleKey', {
+            ipcRenderer.send('keyboardEvent', {
                 ch: ch,
-                modifier: modifier,
+                modifiers: modifiers,
                 event: {
                     type: e.type,
                 },

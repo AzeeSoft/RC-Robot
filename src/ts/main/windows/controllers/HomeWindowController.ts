@@ -16,6 +16,11 @@ export class HomeWindowController extends WindowController {
         });
 
         this.robot = new Robot();
+        this.robot.connectToArduino('COM5', () => {
+
+        }, (err) => {
+            
+        });
 
         this.window.loadFile("src/html/windows/homeWindow.html");
 
@@ -24,16 +29,15 @@ export class HomeWindowController extends WindowController {
         });
     }
 
-    public onKeyboardInputReceived(ch, modifier, e) {
-        Logger.log("Keyboard Event: " + e);
-        Logger.log("Character: " + ch);
-        Logger.log("Modifier: " + modifier);
-    }
-    
     public onRendererDataReceived(channel: string, event: any, data: any) {
-        Logger.log("Channel: " + channel);
-        Logger.log("Event: " + event);
-        Logger.log("Data: ");
-        Logger.log(data);
+
+        // Logger.log("Channel: " + channel);
+        // Logger.log("Event: " + event);
+        // Logger.log("Data: ");
+        // Logger.log(data);
+
+        switch (channel) {
+            
+        }
     }
 }

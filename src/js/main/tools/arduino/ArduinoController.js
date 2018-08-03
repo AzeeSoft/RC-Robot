@@ -44,8 +44,10 @@ class ArduinoController {
     }
     sendData(data, onError) {
         this.port.write(data, (error, bytesWritten) => {
-            if (onError) {
-                onError(error);
+            if (error) {
+                if (onError) {
+                    onError(error);
+                }
             }
         });
     }

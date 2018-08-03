@@ -24,7 +24,7 @@ export class ArduinoController {
         this.onDataReceivedListener = onDataReceivedListener;
     }
 
-    public connect(onSucess: () => void, onFailure: (error: Error) => {}) {
+    public connect(onSucess: () => void, onFailure: (error: Error) => void) {
         this.port = new SerialPort(this.portPath, {
             autoOpen: true,
         }, error => {
@@ -46,7 +46,7 @@ export class ArduinoController {
 
     private onDataReceived(data: string) {
         // Do any pre processing of the data if needed here
-        
+
         if (this.onDataReceivedListener) {
             this.onDataReceivedListener(data);
         }
@@ -58,8 +58,10 @@ export class ArduinoController {
 
     public sendData(data: string, onError?: (error: string) => void) {
         this.port.write(data, (error, bytesWritten) => {
-            if (onError) {
-                onError(error);
+            if (error) {
+                if (onError) {
+                    onError(error);
+                }
             }
         });
     }

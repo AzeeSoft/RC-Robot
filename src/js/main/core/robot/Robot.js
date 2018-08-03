@@ -11,7 +11,9 @@ class Robot {
         this.rcDataProcessor = new RCDataProcessor_1.RCDataProcessor(this);
         this.arduinoController = new ArduinoController_1.ArduinoController();
         this.simpleDrivingComponent = new SimpleDrivingComponent_1.SimpleDrivingComponent(this.arduinoController);
-        this.rcDataReceiver.setDataReceivedCallback(this.rcDataProcessor.onRCDataReceived);
+        this.rcDataReceiver.setDataReceivedCallback((data) => {
+            this.rcDataProcessor.onRCDataReceived(data);
+        });
     }
     connectToArduino(portPath, onSucess, onFailure) {
         this.arduinoController.setPortPath(portPath);
