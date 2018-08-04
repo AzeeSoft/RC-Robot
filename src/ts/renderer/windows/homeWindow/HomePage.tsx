@@ -99,7 +99,11 @@ export class HomePage extends React.Component {
                                     <MenuItem value=''><em>None</em></MenuItem>
                                     {
                                         this.serialPortList.map(function (port) {
-                                            return <MenuItem value={port.comName} key={port.pnpId}>{port.comName}</MenuItem>;
+                                            let displayName = port.comName;
+                                            if (port.manufacturer) {
+                                                displayName += ' - ' + port.manufacturer;
+                                            }
+                                            return <MenuItem value={port.comName} key={port.comName}>{displayName}</MenuItem>;
                                         })
                                     }
                                 </Select>
@@ -110,7 +114,7 @@ export class HomePage extends React.Component {
                         <Button onClick={this.handlers.dialogs.arduinoConnect.close} color='primary'>
                             Close
                         </Button>
-                        
+
                         <Button onClick={this.handlers.dialogs.arduinoConnect.connect} color='primary'>
                             Connect
                         </Button>
