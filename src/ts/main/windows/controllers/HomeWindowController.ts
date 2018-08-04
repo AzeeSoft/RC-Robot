@@ -16,28 +16,27 @@ export class HomeWindowController extends WindowController {
         });
 
         this.robot = new Robot();
-        this.robot.connectToArduino('COM5', () => {
-
-        }, (err) => {
-            
-        });
 
         this.window.loadFile("src/html/windows/homeWindow.html");
 
         this.window.on('ready-to-show', () => {
 
         });
+
+        this.window.on('close', () => {
+            this.robot.destroy();
+        });
     }
 
     public onRendererDataReceived(channel: string, event: any, data: any) {
-
-        // Logger.log("Channel: " + channel);
-        // Logger.log("Event: " + event);
-        // Logger.log("Data: ");
-        // Logger.log(data);
-
         switch (channel) {
-            
+            case 'connectToArduino':
+                this.robot.connectToArduino(data.portPath, () => {
+
+                }, (err) => {
+                    
+                });
+            break;
         }
     }
 }

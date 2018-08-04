@@ -4,6 +4,8 @@ import { WindowController } from './windows/WindowController';
 import { Logger } from '../shared/Logger';
 import { KeyboardEventController } from './tools/input/KeyboardEventController';
 
+import Serialport = require('serialport');
+
 function createTitleWindow() {
     let titleWindowController = new TitleWindowController();
     titleWindowController.showWindow();
@@ -30,4 +32,11 @@ ipcMain.on('keyboardEvent', (event, ...args: any[]) => {
     
     let data = args[0];
     KeyboardEventController.onKeyboardEventReceived(data.ch, data.modifiers, data.event);
+});
+
+ipcMain.on('getSerialPortList', (event, ...args: any[]) => {
+    Serialport.list().then(ports => {
+        event.returnValue = ports;
+        // event.sender.send('serialPortList', ports);
+    });
 });

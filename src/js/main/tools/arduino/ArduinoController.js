@@ -43,13 +43,18 @@ class ArduinoController {
         return (this.port !== null && this.port.isOpen);
     }
     sendData(data, onError) {
-        this.port.write(data, (error, bytesWritten) => {
-            if (error) {
-                if (onError) {
-                    onError(error);
+        if (this.isConnected()) {
+            this.port.write(data, (error, bytesWritten) => {
+                if (error) {
+                    if (onError) {
+                        onError(error);
+                    }
                 }
-            }
-        });
+            });
+        }
+        else {
+            onError('Arduino is not connected');
+        }
     }
     close() {
         if (this.isConnected()) {

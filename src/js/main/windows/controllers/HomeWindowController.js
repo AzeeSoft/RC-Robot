@@ -12,19 +12,20 @@ class HomeWindowController extends WindowController_1.WindowController {
             shouldWaitForLoad: true
         });
         this.robot = new Robot_1.Robot();
-        this.robot.connectToArduino('COM5', () => {
-        }, (err) => {
-        });
         this.window.loadFile("src/html/windows/homeWindow.html");
         this.window.on('ready-to-show', () => {
         });
+        this.window.on('close', () => {
+            this.robot.destroy();
+        });
     }
     onRendererDataReceived(channel, event, data) {
-        // Logger.log("Channel: " + channel);
-        // Logger.log("Event: " + event);
-        // Logger.log("Data: ");
-        // Logger.log(data);
         switch (channel) {
+            case 'connectToArduino':
+                this.robot.connectToArduino(data.portPath, () => {
+                }, (err) => {
+                });
+                break;
         }
     }
 }

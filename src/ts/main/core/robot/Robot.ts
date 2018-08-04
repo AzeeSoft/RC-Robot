@@ -33,4 +33,8 @@ export class Robot {
     public getArduinoController(): ArduinoController {
         return this.arduinoController;
     }
+
+    public destroy() {
+        this.arduinoController.close();
+    }
 }

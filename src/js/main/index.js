@@ -4,6 +4,7 @@ const electron_1 = require("electron");
 const TitleWindowController_1 = require("./windows/controllers/TitleWindowController");
 const WindowController_1 = require("./windows/WindowController");
 const KeyboardEventController_1 = require("./tools/input/KeyboardEventController");
+const Serialport = require("serialport");
 function createTitleWindow() {
     let titleWindowController = new TitleWindowController_1.TitleWindowController();
     titleWindowController.showWindow();
@@ -25,4 +26,10 @@ electron_1.ipcMain.on('keyboardEvent', (event, ...args) => {
     // Logger.log(args);
     let data = args[0];
     KeyboardEventController_1.KeyboardEventController.onKeyboardEventReceived(data.ch, data.modifiers, data.event);
+});
+electron_1.ipcMain.on('getSerialPortList', (event, ...args) => {
+    Serialport.list().then(ports => {
+        event.returnValue = ports;
+        // event.sender.send('serialPortList', ports);
+    });
 });

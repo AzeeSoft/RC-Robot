@@ -57,13 +57,17 @@ export class ArduinoController {
     }
 
     public sendData(data: string, onError?: (error: string) => void) {
-        this.port.write(data, (error, bytesWritten) => {
-            if (error) {
-                if (onError) {
-                    onError(error);
+        if (this.isConnected()) {
+            this.port.write(data, (error, bytesWritten) => {
+                if (error) {
+                    if (onError) {
+                        onError(error);
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            onError('Arduino is not connected');
+        }
     }
 
     public close() {

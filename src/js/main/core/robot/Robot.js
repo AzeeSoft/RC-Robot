@@ -22,5 +22,8 @@ class Robot {
     getArduinoController() {
         return this.arduinoController;
     }
+    destroy() {
+        this.arduinoController.close();
+    }
 }
 exports.Robot = Robot;
