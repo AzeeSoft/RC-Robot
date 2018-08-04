@@ -4,20 +4,25 @@ const Logger_1 = require("../../../../../shared/Logger");
 const RobotComponent_1 = require("../RobotComponent");
 class RCDataProcessor extends RobotComponent_1.RobotComponent {
     constructor(robot) {
-        super(true);
+        super(robot, true);
         this.robot = robot;
     }
     processRCData(data) {
-        Logger_1.Logger.log("RC Data: ");
-        Logger_1.Logger.log(data.value);
-        switch (data.name) {
-            case 'relay':
-                Logger_1.Logger.log("Relay Info: " + data.value);
-                this.relayData(data.value);
-                break;
-            case 'drive':
-                this.driveData(data.value);
-                break;
+        if (this.isFunctional()) {
+            Logger_1.Logger.log("RC Data: ");
+            Logger_1.Logger.log(data.value);
+            switch (data.name) {
+                case 'relay':
+                    Logger_1.Logger.log("Relay Info: " + data.value);
+                    this.relayData(data.value);
+                    break;
+                case 'drive':
+                    this.driveData(data.value);
+                    break;
+            }
+        }
+        else {
+            Logger_1.Logger.log('RC Data Processor is not functional');
         }
     }
     relayData(relayInfo) {

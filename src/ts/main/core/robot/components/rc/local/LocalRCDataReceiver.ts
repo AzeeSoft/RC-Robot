@@ -6,13 +6,14 @@ import { globalShortcut } from 'electron';
 import { KeyboardEventController, keyStates, KeyState } from '../../../../../tools/input/KeyboardEventController';
 import { SuccessCallback } from '../../../../../../shared/CommonTools';
 import { RCData } from '../RCDataProcessor';
+import { Robot } from '../../../Robot';
 
 export class LocalRCDataReceiver extends RCDataReceiver {
 
     private keyboardEventCallback;
 
-    constructor() {
-        super(false);
+    constructor(robot: Robot) {
+        super(robot, false);
         
         this.keyboardEventCallback = (key: string, modifiers: any[], event: any) => {
             // Logger.log("Keyboard Event: ");

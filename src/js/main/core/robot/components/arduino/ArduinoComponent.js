@@ -3,27 +3,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const RobotComponent_1 = require("../RobotComponent");
 const ArduinoController_1 = require("../../../../tools/arduino/ArduinoController");
 class ArduinoComponent extends RobotComponent_1.RobotComponent {
-    constructor() {
-        super(false);
+    constructor(robot) {
+        super(robot, false);
         this.arduinoController = new ArduinoController_1.ArduinoController();
     }
-    getArduinoController() {
-        return this.arduinoController;
-    }
-    /* private connectToArduino(portPath: string, onSucess: () => void, onFailure: (error: Error) => void) {
-        if (this.isEnabled()) {
-            this.arduinoController.setPortPath(portPath);
-            this.arduinoController.connect(onSucess, onFailure);
-        } else {
-            onFailure(new Error('Arduino Component is disabled'));
-        }
-    } */
     sendDataToArduino(data, onError) {
-        if (this.isEnabled()) {
+        if (this.isFunctional()) {
             this.arduinoController.sendData(data, onError);
         }
         else {
-            onError('Arduino Component is disabled');
+            onError('Arduino Component is not functional');
         }
     }
     onEnable(callback, portPath) {

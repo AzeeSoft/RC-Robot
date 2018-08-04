@@ -2,33 +2,21 @@ import { RobotComponent } from "../RobotComponent";
 import { ArduinoController } from "../../../../tools/arduino/ArduinoController";
 import { Logger } from '../../../../../shared/Logger';
 import { SuccessCallback } from '../../../../../shared/CommonTools';
+import { Robot } from '../../Robot';
 
 export class ArduinoComponent extends RobotComponent {
     private arduinoController: ArduinoController;
 
-    constructor() {
-        super(false);
+    constructor(robot: Robot) {
+        super(robot, false);
         this.arduinoController = new ArduinoController();
     }
 
-    public getArduinoController(): ArduinoController {
-        return this.arduinoController;
-    }
-
-    /* private connectToArduino(portPath: string, onSucess: () => void, onFailure: (error: Error) => void) {
-        if (this.isEnabled()) {
-            this.arduinoController.setPortPath(portPath);
-            this.arduinoController.connect(onSucess, onFailure);
-        } else {
-            onFailure(new Error('Arduino Component is disabled'));
-        }
-    } */
-
     public sendDataToArduino(data: string, onError: (string) => void) {
-        if (this.isEnabled()) {
+        if (this.isFunctional()) {
             this.arduinoController.sendData(data, onError);
         } else {
-            onError('Arduino Component is disabled');
+            onError('Arduino Component is not functional');
         }
     }
 

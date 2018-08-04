@@ -1,21 +1,22 @@
 import { SuccessCallback } from '../../../../shared/CommonTools';
 import { Logger } from '../../../../shared/Logger';
+import { Robot } from '../Robot';
+
 export abstract class RobotComponent {
     private _isEnabled = false;
+    private isEnablePending = false;
 
-    constructor(autoEnable: boolean, callback: SuccessCallback = (success) => {}) {
+    protected robot: Robot;
+
+    constructor(robot: Robot, autoEnable: boolean, callback: SuccessCallback = (success) => {}) {
+        this.robot = robot;
+        
         if (autoEnable) {
             this.enable(callback);
         }
     }
 
-    public enable(callback: SuccessCallback, ...componentArgs) {
-        if (this.isEnabled()) {
-            Logger.log('Component is already enabled');
-            callback(true, 'Component is already enabled');
-            return;
-        }
-
+    private _enableImmediate(callback: SuccessCallback, ...componentArgs) {
         this.onEnable((success, msg = '') => {
             if (success) {
                 this._isEnabled = true;
@@ -23,6 +24,30 @@ export abstract class RobotComponent {
 
             callback(success, msg);
         }, ...componentArgs);
+    }
+
+    public enable(callback: SuccessCallback, ...componentArgs) {
+        if (this.isEnablePending) {
+            Logger.log('Enable request is already pending on this component');
+            callback(true, 'Enable request is already pending on this component');
+            return;
+        }
+
+        if (this.isEnabled()) {
+            Logger.log('Component is already enabled');
+            callback(true, 'Component is already enabled');
+            return;
+        }
+
+        if (this.robot.isReady()) {
+            this._enableImmediate(callback, ...componentArgs);
+        } else {
+            this.isEnablePending = true;
+            this.robot.addReadyCallback(() => {
+                this.isEnablePending = false;
+                this._enableImmediate(callback, ...componentArgs);
+            });
+        }
     }
 
     public disable(callback: SuccessCallback, ...componentArgs) {
@@ -41,8 +66,12 @@ export abstract class RobotComponent {
         }, ...componentArgs);
     }
 
-    public isEnabled(): boolean {
+    private isEnabled(): boolean {
         return this._isEnabled;
+    }
+
+    public isFunctional(): boolean {
+        return this.robot.isReady() && this.isEnabled();
     }
 
     /**

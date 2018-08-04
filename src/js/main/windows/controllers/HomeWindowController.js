@@ -11,7 +11,7 @@ class HomeWindowController extends WindowController_1.WindowController {
             },
             shouldWaitForLoad: true
         });
-        this.robot = new Robot_1.Robot();
+        this.robot = Robot_1.Robot.getInstance();
         this.window.loadFile("src/html/windows/homeWindow.html");
         this.window.on('ready-to-show', () => {
         });

@@ -4,8 +4,8 @@ const RCDataReceiver_1 = require("../RCDataReceiver");
 const Logger_1 = require("../../../../../../shared/Logger");
 const KeyboardEventController_1 = require("../../../../../tools/input/KeyboardEventController");
 class LocalRCDataReceiver extends RCDataReceiver_1.RCDataReceiver {
-    constructor() {
-        super(false);
+    constructor(robot) {
+        super(robot, false);
         this.keyboardEventCallback = (key, modifiers, event) => {
             // Logger.log("Keyboard Event: ");
             // Logger.log(event);

@@ -15,7 +15,7 @@ export class HomeWindowController extends WindowController {
             shouldWaitForLoad: true
         });
 
-        this.robot = new Robot();
+        this.robot = Robot.getInstance();
 
         this.window.loadFile("src/html/windows/homeWindow.html");
 
@@ -32,7 +32,7 @@ export class HomeWindowController extends WindowController {
         switch (channel) {
             case 'connectToArduino':
                 this.robot.arduinoComponent.enable((success, errorMsg) => {
-                    
+
                 }, data.portPath);
             break;
         }

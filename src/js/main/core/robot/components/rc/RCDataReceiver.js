@@ -9,13 +9,8 @@ class RCDataReceiver extends RobotComponent_1.RobotComponent {
     setDataReceivedCallback(dataReceivedCallback) {
         this.dataReceivedCallback = dataReceivedCallback;
     }
-    setRCDataProcessor(rcDataProcessor) {
-        this.rcDataProcessor = rcDataProcessor;
-    }
     onRCDataReceived(rcData) {
-        if (this.rcDataProcessor) {
-            this.rcDataProcessor.processRCData(rcData);
-        }
+        this.robot.rcDataProcessor.processRCData(rcData);
         this.dataReceivedCallback(rcData);
     }
 }

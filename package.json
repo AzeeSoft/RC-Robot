@@ -4,13 +4,16 @@
   "description": "Remote Controlled Home Robot App",
   "main": "src/js/main/index.js",
   "scripts": {
-    "dev": "npm run development",
-    "development": "webpack --progress --hide-modules",
-    "watch": "webpack --watch --progress --hide-modules",
-    "watch-poll": "npm run watch -- --watch-poll",
-    "hot": "webpack-dev-server --inline --hot",
-    "prod": "npm run production",
-    "production": "webpack --progress --hide-modules",
+    "dev-wp": "npm run development-wp",
+    "development-wp": "webpack --progress --hide-modules",
+    "watch-wp": "webpack --watch --progress --hide-modules",
+    "watch-poll-wp": "npm run watch-wp --watch-poll",
+    "hot-wp": "webpack-dev-server --inline --hot",
+    "prod-wp": "npm run production-wp",
+    "production-wp": "webpack --progress --hide-modules",
+
+    "watch-ts": "tsc -w",
+    
     "start": "electron .",
     "rebuild-serialport": "electron-rebuild -f -w serialport"
   },

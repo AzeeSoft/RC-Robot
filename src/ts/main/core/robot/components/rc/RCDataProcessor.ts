@@ -6,25 +6,28 @@ import { SuccessCallback } from '../../../../../shared/CommonTools';
 export type RCData = { name: string, value: any };
 
 export class RCDataProcessor extends RobotComponent {
-    private robot: Robot;
 
     constructor(robot: Robot) {
-        super(true);
+        super(robot, true);
         this.robot = robot
     }
 
     public processRCData(data: RCData) {
-        Logger.log("RC Data: ");
-        Logger.log(data.value);
+        if (this.isFunctional()) {
+            Logger.log("RC Data: ");
+            Logger.log(data.value);
 
-        switch (data.name) {
-            case 'relay':
-                Logger.log("Relay Info: " + data.value);
-                this.relayData(data.value);
-                break;
-            case 'drive':
-                this.driveData(data.value);
-                break;
+            switch (data.name) {
+                case 'relay':
+                    Logger.log("Relay Info: " + data.value);
+                    this.relayData(data.value);
+                    break;
+                case 'drive':
+                    this.driveData(data.value);
+                    break;
+            }
+        } else {
+            Logger.log('RC Data Processor is not functional');
         }
     }
 

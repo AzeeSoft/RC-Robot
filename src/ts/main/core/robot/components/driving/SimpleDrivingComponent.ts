@@ -3,25 +3,22 @@ import { RobotComponent } from '../RobotComponent';
 import { SuccessCallback } from '../../../../../shared/CommonTools';
 import { Logger } from '../../../../../shared/Logger';
 import { ArduinoComponent } from '../arduino/ArduinoComponent';
+import { Robot } from '../../Robot';
 
 export class SimpleDrivingComponent extends RobotComponent {
-    private arduinoComponent: ArduinoComponent = null;
 
-    constructor(arduinoComponent: ArduinoComponent) {
-        super(true);
-        this.arduinoComponent = arduinoComponent;
-    }
-
-    public isFunctionable() {
-        return (this.isEnabled() && this.arduinoComponent && this.arduinoComponent.isEnabled());
+    constructor(robot: Robot) {
+        super(robot, true);
     }
 
     public drive(hor: number, ver: number) {
-        if (this.isFunctionable()) {
+        if (this.isFunctional()) {
             let arduinoDriveData = 'Drive:' + hor + ':' + ver + ':\n';
-            this.arduinoComponent.sendDataToArduino(arduinoDriveData, (error) => {
+            this.robot.arduinoComponent.sendDataToArduino(arduinoDriveData, (error) => {
                 Logger.log('Cannot drive using Arduino: ' + error);
             });
+        } else {
+            Logger.log('Driving Component is not functional');
         }
     }
 

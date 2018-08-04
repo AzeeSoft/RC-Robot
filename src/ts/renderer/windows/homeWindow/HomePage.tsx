@@ -79,8 +79,15 @@ export class HomePage extends React.Component {
             <div className="homePage">
                 <h1>Welcome to Zerone's Home Page</h1>
 
+                
+
+
                 {/* Connect to Arduino */}
-                <Button onClick={this.handlers.dialogs.arduinoConnect.open}>Connect to Arduino</Button>
+                <Button
+                    variant="outlined"
+                    onClick={this.handlers.dialogs.arduinoConnect.open}>
+                    Connect to Arduino
+                </Button>
 
                 <Dialog
                     disableBackdropClick
