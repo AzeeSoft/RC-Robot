@@ -1,3 +1,4 @@
+import { CommonTools } from '../../../shared/CommonTools';
 type KeyboardEventCallback = (key: string, modifiers: any[], event: any) => void;
 
 export class KeyState {
@@ -42,6 +43,10 @@ export class KeyboardEventController {
 
     public static addKeyboardEventCallback(callback: KeyboardEventCallback) {
         KeyboardEventController.keyboardEventCallbacks.push(callback);
+    }
+
+    public static removeKeyboardEventCallback(callback: KeyboardEventCallback) {
+        CommonTools.removeItemFromArray(KeyboardEventController.keyboardEventCallbacks, callback);
     }
 }
 

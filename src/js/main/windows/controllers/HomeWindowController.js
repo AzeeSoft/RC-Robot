@@ -22,9 +22,8 @@ class HomeWindowController extends WindowController_1.WindowController {
     onRendererDataReceived(channel, event, data) {
         switch (channel) {
             case 'connectToArduino':
-                this.robot.connectToArduino(data.portPath, () => {
-                }, (err) => {
-                });
+                this.robot.arduinoComponent.enable((success, errorMsg) => {
+                }, data.portPath);
                 break;
         }
     }

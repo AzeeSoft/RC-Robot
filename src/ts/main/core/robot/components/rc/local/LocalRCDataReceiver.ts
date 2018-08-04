@@ -4,24 +4,38 @@ import keypress = require('keypress');
 import { Logger } from '../../../../../../shared/Logger';
 import { globalShortcut } from 'electron';
 import { KeyboardEventController, keyStates, KeyState } from '../../../../../tools/input/KeyboardEventController';
+import { SuccessCallback } from '../../../../../../shared/CommonTools';
+import { RCData } from '../RCDataProcessor';
 
 export class LocalRCDataReceiver extends RCDataReceiver {
-    constructor() {
-        super();
-        this.listenForLocalInput();
-    }
 
-    private listenForLocalInput() {
-        KeyboardEventController.addKeyboardEventCallback((key: string, modifiers: any[], event: any) => {
+    private keyboardEventCallback;
+
+    constructor() {
+        super(false);
+        
+        this.keyboardEventCallback = (key: string, modifiers: any[], event: any) => {
             // Logger.log("Keyboard Event: ");
             // Logger.log(event);
             // Logger.log("Key: " + key);
             // Logger.log("Modifiers: " + modifiers);
 
             this.processKeyEvent(key, modifiers, event);
-        });
+        };
 
-        Logger.log("Listening for key press...");
+        this.enable((success) => {
+            
+        });
+    }
+
+    private listenForLocalInput() {
+        KeyboardEventController.addKeyboardEventCallback(this.keyboardEventCallback);
+        Logger.log("Listening for key events...");
+    }
+
+    private stopListeningForLocalInput() {
+        KeyboardEventController.removeKeyboardEventCallback(this.keyboardEventCallback);
+        Logger.log("Stopped Listening for key events...");
     }
 
     private processKeyEvent(key: string, modifiers: any[], event: any) {
@@ -30,12 +44,12 @@ export class LocalRCDataReceiver extends RCDataReceiver {
             case 'right':
             case 'down':
             case 'left':
-                this.dataReceivedCallback(this.getDrivingData());
+                this.onRCDataReceived(this.getDrivingData());
                 break;
         }
     }
 
-    private getDrivingData(): object {
+    private getDrivingData(): RCData {
         let drivingExtremeValue = 100;
 
         let h = 0;
@@ -58,11 +72,21 @@ export class LocalRCDataReceiver extends RCDataReceiver {
         v = v * drivingExtremeValue;
 
         return {
-            name: 'relay',
+            name: 'drive',
             value: {
-                target: 'arduino',
-                data: 'Drive:' + h + ':' + v + ':\n',
+                hor: h,
+                ver: v,
             },
         };
+    }
+
+    protected onEnable(callback: SuccessCallback, ...args) {
+        this.listenForLocalInput();
+        callback(true);
+    }
+
+    protected onDisable(callback: SuccessCallback, ...args) {
+        this.stopListeningForLocalInput();
+        callback(true);
     }
 }

@@ -32,9 +32,13 @@ export class App extends React.Component {
 }
 
 class WindowConnection {
-    public sendDataToWindow(channel: string, data: any) {
+    public sendDataToWindow(channel: string, data: any, sync: boolean = false) {
         Logger.log(data);
-        ipcRenderer.send('windowData', remote.getCurrentWindow().id, channel, data);
+        if (sync) {
+            ipcRenderer.sendSync('windowData', remote.getCurrentWindow().id, channel, data);
+        } else {
+            ipcRenderer.send('windowData', remote.getCurrentWindow().id, channel, data);
+        }
     }
 }
 

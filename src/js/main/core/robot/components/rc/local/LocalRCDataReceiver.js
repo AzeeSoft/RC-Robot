@@ -5,18 +5,24 @@ const Logger_1 = require("../../../../../../shared/Logger");
 const KeyboardEventController_1 = require("../../../../../tools/input/KeyboardEventController");
 class LocalRCDataReceiver extends RCDataReceiver_1.RCDataReceiver {
     constructor() {
-        super();
-        this.listenForLocalInput();
-    }
-    listenForLocalInput() {
-        KeyboardEventController_1.KeyboardEventController.addKeyboardEventCallback((key, modifiers, event) => {
+        super(false);
+        this.keyboardEventCallback = (key, modifiers, event) => {
             // Logger.log("Keyboard Event: ");
             // Logger.log(event);
             // Logger.log("Key: " + key);
             // Logger.log("Modifiers: " + modifiers);
             this.processKeyEvent(key, modifiers, event);
+        };
+        this.enable((success) => {
         });
-        Logger_1.Logger.log("Listening for key press...");
+    }
+    listenForLocalInput() {
+        KeyboardEventController_1.KeyboardEventController.addKeyboardEventCallback(this.keyboardEventCallback);
+        Logger_1.Logger.log("Listening for key events...");
+    }
+    stopListeningForLocalInput() {
+        KeyboardEventController_1.KeyboardEventController.removeKeyboardEventCallback(this.keyboardEventCallback);
+        Logger_1.Logger.log("Stopped Listening for key events...");
     }
     processKeyEvent(key, modifiers, event) {
         switch (key) {
@@ -24,7 +30,7 @@ class LocalRCDataReceiver extends RCDataReceiver_1.RCDataReceiver {
             case 'right':
             case 'down':
             case 'left':
-                this.dataReceivedCallback(this.getDrivingData());
+                this.onRCDataReceived(this.getDrivingData());
                 break;
         }
     }
@@ -47,12 +53,20 @@ class LocalRCDataReceiver extends RCDataReceiver_1.RCDataReceiver {
         h = h * drivingExtremeValue;
         v = v * drivingExtremeValue;
         return {
-            name: 'relay',
+            name: 'drive',
             value: {
-                target: 'arduino',
-                data: 'Drive:' + h + ':' + v + ':\n',
+                hor: h,
+                ver: v,
             },
         };
+    }
+    onEnable(callback, ...args) {
+        this.listenForLocalInput();
+        callback(true);
+    }
+    onDisable(callback, ...args) {
+        this.stopListeningForLocalInput();
+        callback(true);
     }
 }
 exports.LocalRCDataReceiver = LocalRCDataReceiver;

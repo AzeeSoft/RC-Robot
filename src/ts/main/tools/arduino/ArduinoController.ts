@@ -1,6 +1,8 @@
 import { Logger } from '../../../shared/Logger';
+import { SuccessCallback } from '../../../shared/CommonTools';
 import SerialPort = require('serialport');
 import Readline = require('@serialport/parser-readline')
+import { ErrorCallback } from 'serialport';
 
 type OnArduinoDataReceivedListener = (data: string) => void;
 
@@ -70,11 +72,18 @@ export class ArduinoController {
         }
     }
 
-    public close() {
+    public close(callback: SuccessCallback) {
         if (this.isConnected()) {
             this.port.close(error => {
-                Logger.log("Cannot close Arduino connection: " + error);
+                if (error) {
+                    Logger.log("Cannot close Arduino connection: " + error);
+                    callback(false);
+                } else {
+                    callback(true);
+                }
             });
+        } else {
+            callback(true);
         }
     }
 }

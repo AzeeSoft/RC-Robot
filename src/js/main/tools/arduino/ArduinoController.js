@@ -56,11 +56,20 @@ class ArduinoController {
             onError('Arduino is not connected');
         }
     }
-    close() {
+    close(callback) {
         if (this.isConnected()) {
             this.port.close(error => {
-                Logger_1.Logger.log("Cannot close Arduino connection: " + error);
+                if (error) {
+                    Logger_1.Logger.log("Cannot close Arduino connection: " + error);
+                    callback(false);
+                }
+                else {
+                    callback(true);
+                }
             });
+        }
+        else {
+            callback(true);
         }
     }
 }

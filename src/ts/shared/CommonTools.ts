@@ -1,5 +1,7 @@
 // A list of common tools used throughout the application
 
+export type SuccessCallback = (success: boolean, msg?: string) => any
+
 export class CommonTools {
     /**
      * Removes the item from the array if it exists
