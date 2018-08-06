@@ -3,7 +3,7 @@ import * as ReactDOM from 'react-dom';
 import Button from '@material-ui/core/Button'
 
 import '../../../../scss/windows/titleWindow.scss';
-import { CircularProgress } from '../../../../../node_modules/@material-ui/core';
+import { CircularProgress } from '@material-ui/core';
 import { AZComponent } from '../../components/AZComponent';
 
 export class TitlePage extends AZComponent {
