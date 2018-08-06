@@ -58,8 +58,6 @@ export class Robot {
         this.rcDataProcessor.disable(success => { });
         this.rcDataReceiver.disable(success => { });
 
-        this._isReady = false;
-
         Robot.instance = null;
     }
 }

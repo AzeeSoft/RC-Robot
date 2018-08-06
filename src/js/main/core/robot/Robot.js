@@ -40,7 +40,6 @@ class Robot {
         this.arduinoComponent.disable(success => { });
         this.rcDataProcessor.disable(success => { });
         this.rcDataReceiver.disable(success => { });
-        this._isReady = false;
         Robot.instance = null;
     }
 }

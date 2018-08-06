@@ -11,9 +11,7 @@
     "hot-wp": "webpack-dev-server --inline --hot",
     "prod-wp": "npm run production-wp",
     "production-wp": "webpack --progress --hide-modules",
-
     "watch-ts": "tsc -w",
-    
     "start": "electron .",
     "rebuild-serialport": "electron-rebuild -f -w serialport"
   },
@@ -46,6 +44,7 @@
   "dependencies": {
     "@types/mousetrap": "^1.6.0",
     "hoek": "^5.0.3",
+    "immutability-helper": "^2.7.1",
     "keypress": "^0.2.1",
     "mousetrap": "^1.6.2",
     "serialport": "^6.2.2"

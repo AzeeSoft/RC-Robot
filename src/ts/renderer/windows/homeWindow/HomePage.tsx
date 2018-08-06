@@ -11,17 +11,26 @@ import { Logger } from '../../../shared/Logger';
 import { windowConnection } from '../../App';
 import Dialog from '../../../../../node_modules/@material-ui/core/Dialog';
 import { DialogTitle, DialogContent, FormControl, InputLabel, Select, Input, MenuItem, DialogActions } from '../../../../../node_modules/@material-ui/core';
+import { RobotComponentControl } from '../../components/robot/RobotComponentControl';
+import { DeepPartial } from '../../../shared/CommonTools';
+import update, { Query } from 'immutability-helper';
+import { AZComponent } from '../../components/AZComponent';
 
-export class HomePage extends React.Component {
 
-    state = {
-        dialogs: {
-            arduinoConnect: {
-                open: false,
-                portPath: '',
-            }
+type HomePageState = Readonly<typeof defaultState>
+
+const defaultState = {
+    dialogs: {
+        arduinoConnect: {
+            open: false,
+            portPath: '',
         }
     }
+}
+
+export class HomePage extends AZComponent<any, HomePageState> {
+
+    state = defaultState;
 
     serialPortList: any[] = [];
 
@@ -31,23 +40,32 @@ export class HomePage extends React.Component {
                 open: () => {
                     this.serialPortList = ipcRenderer.sendSync('getSerialPortList');
 
-                    this.setState(state => {
-                        (state as any).dialogs.arduinoConnect.open = true;
-                        return state;
+                    this.updateState({
+                        dialogs: {
+                            arduinoConnect: {
+                                open: { $set: true }
+                            }
+                        }
                     });
                 },
 
                 close: () => {
-                    this.setState(state => {
-                        (state as any).dialogs.arduinoConnect.open = false;
-                        return state;
+                    this.updateState({
+                        dialogs: {
+                            arduinoConnect: {
+                                open: { $set: false }
+                            }
+                        }
                     });
                 },
 
                 onPortSelected: (event) => {
-                    this.setState(state => {
-                        (state as any).dialogs.arduinoConnect.portPath = event.target.value;
-                        return state;
+                    this.updateState({
+                        dialogs: {
+                            arduinoConnect: {
+                                portPath: { $set: event.target.value }
+                            }
+                        }
                     });
                 },
 
@@ -79,7 +97,7 @@ export class HomePage extends React.Component {
             <div className="homePage">
                 <h1>Welcome to Zerone's Home Page</h1>
 
-                
+                <RobotComponentControl icon='add-icon' />
 
 
                 {/* Connect to Arduino */}
@@ -148,6 +166,5 @@ export class HomePage extends React.Component {
             var self = this;
             return self._handleKey.apply(self, arguments);
         };
-
     }
 }
