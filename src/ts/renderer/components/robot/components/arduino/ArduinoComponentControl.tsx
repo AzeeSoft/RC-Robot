@@ -39,7 +39,7 @@ export class ArduinoComponentControl extends RobotComponentControl<ArduinoCompon
         }
     };
 
-    constructor(props: Readonly<{}>) {
+    constructor(props: Readonly<ArduinoComponentControlProps>) {
         super(props, 'Arduino Component', 'add-icon');
     }
 

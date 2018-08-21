@@ -4,7 +4,7 @@ const Logger_1 = require("../../../../../shared/Logger");
 const RobotComponent_1 = require("../RobotComponent");
 class RCDataProcessor extends RobotComponent_1.RobotComponent {
     constructor(robot) {
-        super(robot, true);
+        super("RC Data Processor", robot, true);
         this.robot = robot;
     }
     processRCData(data) {

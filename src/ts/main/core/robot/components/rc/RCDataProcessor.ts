@@ -8,7 +8,7 @@ export type RCData = { name: string, value: any };
 export class RCDataProcessor extends RobotComponent {
 
     constructor(robot: Robot) {
-        super(robot, true);
+        super("RC Data Processor", robot, true);
         this.robot = robot
     }
 

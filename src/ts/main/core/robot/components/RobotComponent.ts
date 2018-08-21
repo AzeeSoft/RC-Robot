@@ -3,12 +3,16 @@ import { Logger } from '../../../../shared/Logger';
 import { Robot } from '../Robot';
 
 export abstract class RobotComponent {
+
+    public readonly name: string = "Robot Component";
+
     private _isEnabled = false;
     private isEnablePending = false;
 
     protected robot: Robot;
 
-    constructor(robot: Robot, autoEnable: boolean, callback: SuccessCallback = (success) => {}) {
+    constructor(name: string, robot: Robot, autoEnable: boolean, callback: SuccessCallback = (success) => {}) {
+        this.name = name;
         this.robot = robot;
         
         if (autoEnable) {

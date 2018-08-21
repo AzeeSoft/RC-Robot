@@ -2,9 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const Logger_1 = require("../../../../shared/Logger");
 class RobotComponent {
-    constructor(robot, autoEnable, callback = (success) => { }) {
+    constructor(name, robot, autoEnable, callback = (success) => { }) {
+        this.name = "Robot Component";
         this._isEnabled = false;
         this.isEnablePending = false;
+        this.name = name;
         this.robot = robot;
         if (autoEnable) {
             this.enable(callback);

@@ -16,6 +16,7 @@ import { DeepPartial } from '../../../shared/CommonTools';
 import update, { Query } from 'immutability-helper';
 import { AZComponent } from '../../components/AZComponent';
 import { ArduinoComponentControl } from '../../components/robot/components/arduino/ArduinoComponentControl';
+import { RobotInterface } from '../../components/robot/RobotInterface';
 
 
 type HomePageState = Readonly<typeof defaultState>
@@ -38,7 +39,7 @@ export class HomePage extends AZComponent<any, HomePageState> {
             <div className="homePage">
                 <h1>Welcome to Zerone's Home Page</h1>
 
-                {<ArduinoComponentControl/>}
+                <RobotInterface/>
             </div>
         );
     }

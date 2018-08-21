@@ -13,7 +13,7 @@ export class LocalRCDataReceiver extends RCDataReceiver {
     private keyboardEventCallback;
 
     constructor(robot: Robot) {
-        super(robot, false);
+        super("RC Data Receiver", robot, false);
         
         this.keyboardEventCallback = (key: string, modifiers: any[], event: any) => {
             // Logger.log("Keyboard Event: ");

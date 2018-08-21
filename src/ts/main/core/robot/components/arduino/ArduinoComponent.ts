@@ -8,7 +8,7 @@ export class ArduinoComponent extends RobotComponent {
     private arduinoController: ArduinoController;
 
     constructor(robot: Robot) {
-        super(robot, false);
+        super("Arduino Component", robot, false);
         this.arduinoController = new ArduinoController();
     }
 

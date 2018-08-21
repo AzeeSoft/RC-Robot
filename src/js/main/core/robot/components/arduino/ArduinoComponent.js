@@ -4,7 +4,7 @@ const RobotComponent_1 = require("../RobotComponent");
 const ArduinoController_1 = require("../../../../tools/arduino/ArduinoController");
 class ArduinoComponent extends RobotComponent_1.RobotComponent {
     constructor(robot) {
-        super(robot, false);
+        super("Arduino Component", robot, false);
         this.arduinoController = new ArduinoController_1.ArduinoController();
     }
     sendDataToArduino(data, onError) {

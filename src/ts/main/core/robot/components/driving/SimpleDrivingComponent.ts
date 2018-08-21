@@ -8,7 +8,7 @@ import { Robot } from '../../Robot';
 export class SimpleDrivingComponent extends RobotComponent {
 
     constructor(robot: Robot) {
-        super(robot, true);
+        super("Driving Component", robot, true);
     }
 
     public drive(hor: number, ver: number) {

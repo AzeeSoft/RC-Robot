@@ -4,7 +4,7 @@ const RobotComponent_1 = require("../RobotComponent");
 const Logger_1 = require("../../../../../shared/Logger");
 class SimpleDrivingComponent extends RobotComponent_1.RobotComponent {
     constructor(robot) {
-        super(robot, true);
+        super("Driving Component", robot, true);
     }
     drive(hor, ver) {
         if (this.isFunctional()) {
