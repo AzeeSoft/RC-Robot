@@ -26,7 +26,7 @@ export class Robot {
     private constructor() {
         Robot.instance = this;
 
-        // Change this line to use the correct RC Data Receiver.
+        //TODO: Change this line to use the correct RC Data Receiver.
         this.rcDataReceiver = new LocalRCDataReceiver(this);
         this.rcDataProcessor = new RCDataProcessor(this);
         this.arduinoComponent = new ArduinoComponent(this);

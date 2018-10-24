@@ -14,7 +14,7 @@ export abstract class RobotComponent {
     constructor(name: string, robot: Robot, autoEnable: boolean, callback: SuccessCallback = (success) => {}) {
         this.name = name;
         this.robot = robot;
-        
+
         if (autoEnable) {
             this.enable(callback);
         }
@@ -63,7 +63,7 @@ export abstract class RobotComponent {
 
         this.onDisable((success, msg = '') => {
             if (success) {
-                this._isEnabled = true;
+                this._isEnabled = false;
             }
 
             callback(success, msg);
@@ -82,7 +82,7 @@ export abstract class RobotComponent {
      * @returns true if the component was successfully enabled. false otherwise
      */
     protected abstract onEnable(callback: SuccessCallback, ...args);
-    
+
     /**
      * @returns true if the component was successfully disabled. false otherwise
      */
