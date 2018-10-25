@@ -1,4 +1,4 @@
-import { AppConfig, AppMode } from './AppConfig';
+import { AppConfig, AppMode } from '../config/AppConfig';
 
 export class Logger {
     public static debug(message: any) {

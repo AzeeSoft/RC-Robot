@@ -1,5 +1,5 @@
 import { RobotComponent } from "../RobotComponent";
-import { ArduinoController } from "../../../../tools/arduino/ArduinoController";
+import { ArduinoController } from "./ArduinoController";
 import { Logger } from '../../../../tools/misc/Logger';
 import { SuccessCallback } from '../../../../tools/misc/CommonTools';
 import { Robot } from '../../Robot';

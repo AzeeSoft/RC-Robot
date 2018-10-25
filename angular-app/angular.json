@@ -11,6 +11,9 @@
       "schematics": {
         "@schematics/angular:component": {
           "styleext": "scss"
+        },
+        "@schematics/angular:service": {
+          "flat": false
         }
       },
       "architect": {
@@ -26,7 +29,7 @@
             "customWebpackConfig": {
               "path": "./extra-webpack.config.js"
             },
-            "styles": ["src/styles.scss"],
+            "styles": ["src/assets/scss/styles.scss"],
             "scripts": []
           },
           "configurations": {
