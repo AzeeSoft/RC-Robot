@@ -7,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CommandInterfaceComponent implements OnInit {
 
+  public input: string;
+
   constructor() { }
 
   ngOnInit() {

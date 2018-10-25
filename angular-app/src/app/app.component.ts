@@ -19,7 +19,7 @@ export class AppComponent implements OnInit {
 
   listenToKeyboardEvents() {
     Mousetrap.prototype.handleKey = function(ch, modifiers, e) {
-      Logger.debug(e);
+      // Logger.debug(e);
 
       ipcRenderer.send('keyboardEvent', {
         ch: ch,
