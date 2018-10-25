@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const RobotComponent_1 = require("../RobotComponent");
-const Logger_1 = require("../../../../../shared/Logger");
+const Logger_1 = require("../../../../tools/misc/Logger");
 class SimpleDrivingComponent extends RobotComponent_1.RobotComponent {
     constructor(robot) {
         super("Driving Component", robot, true);

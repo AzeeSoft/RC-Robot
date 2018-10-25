@@ -1,6 +1,6 @@
 import { BrowserWindow, BrowserWindowConstructorOptions } from 'electron';
-import { CommonTools } from '../../shared/CommonTools';
-import { Logger } from '../../shared/Logger';
+import { CommonTools } from '../tools/misc/CommonTools';
+import { Logger } from '../tools/misc/Logger';
 import { AppInstance } from '../core/app/AppInstance';
 import { AppConfig, RendererMode } from '../tools/misc/AppConfig';
 
@@ -81,7 +81,7 @@ export abstract class WindowController {
 
     public LoadRendererPage(rendererPage: string) {
         switch (AppConfig.rendererMode) {
-            case RendererMode.DEV_SERVER:
+            case RendererMode.SERVER:
                 this.window.loadURL('http://localhost:4200/' + rendererPage);
                 break;
             case RendererMode.FILE:

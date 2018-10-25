@@ -1,7 +1,7 @@
 import { ArduinoController } from '../../../../tools/arduino/ArduinoController';
 import { RobotComponent } from '../RobotComponent';
-import { SuccessCallback } from '../../../../../shared/CommonTools';
-import { Logger } from '../../../../../shared/Logger';
+import { SuccessCallback } from '../../../../tools/misc/CommonTools';
+import { Logger } from '../../../../tools/misc/Logger';
 import { ArduinoComponent } from '../arduino/ArduinoComponent';
 import { Robot } from '../../Robot';
 

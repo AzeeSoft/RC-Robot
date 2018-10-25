@@ -1,7 +1,7 @@
 import { RobotComponent } from "../RobotComponent";
 import { ArduinoController } from "../../../../tools/arduino/ArduinoController";
-import { Logger } from '../../../../../shared/Logger';
-import { SuccessCallback } from '../../../../../shared/CommonTools';
+import { Logger } from '../../../../tools/misc/Logger';
+import { SuccessCallback } from '../../../../tools/misc/CommonTools';
 import { Robot } from '../../Robot';
 
 export class ArduinoComponent extends RobotComponent {

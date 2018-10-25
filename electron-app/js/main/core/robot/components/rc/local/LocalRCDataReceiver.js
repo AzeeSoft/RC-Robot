@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const RCDataReceiver_1 = require("../RCDataReceiver");
-const Logger_1 = require("../../../../../../shared/Logger");
+const Logger_1 = require("../../../../../tools/misc/Logger");
 const KeyboardEventController_1 = require("../../../../../tools/input/KeyboardEventController");
 class LocalRCDataReceiver extends RCDataReceiver_1.RCDataReceiver {
     constructor(robot) {

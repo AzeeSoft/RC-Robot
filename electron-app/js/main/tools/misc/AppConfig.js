@@ -7,10 +7,10 @@ var AppMode;
 })(AppMode = exports.AppMode || (exports.AppMode = {}));
 var RendererMode;
 (function (RendererMode) {
-    RendererMode[RendererMode["DEV_SERVER"] = 0] = "DEV_SERVER";
+    RendererMode[RendererMode["SERVER"] = 0] = "SERVER";
     RendererMode[RendererMode["FILE"] = 1] = "FILE";
 })(RendererMode = exports.RendererMode || (exports.RendererMode = {}));
 exports.AppConfig = {
     appMode: AppMode.DEBUG,
-    rendererMode: RendererMode.DEV_SERVER,
+    rendererMode: RendererMode.FILE,
 };

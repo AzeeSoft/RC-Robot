@@ -1,4 +1,4 @@
-import { CommonTools } from '../../../shared/CommonTools';
+import { CommonTools } from '../misc/CommonTools';
 type KeyboardEventCallback = (key: string, modifiers: any[], event: any) => void;
 
 export class KeyState {

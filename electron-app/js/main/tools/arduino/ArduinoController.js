@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const Logger_1 = require("../../../shared/Logger");
+const Logger_1 = require("../misc/Logger");
 const SerialPort = require("serialport");
 const Readline = require("@serialport/parser-readline");
 class ArduinoController {

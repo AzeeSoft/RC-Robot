@@ -1,7 +1,7 @@
 import { Robot } from "../../Robot";
-import { Logger } from '../../../../../shared/Logger';
+import { Logger } from '../../../../tools/misc/Logger';
 import { RobotComponent } from "../RobotComponent";
-import { SuccessCallback } from '../../../../../shared/CommonTools';
+import { SuccessCallback } from '../../../../tools/misc/CommonTools';
 
 export type RCData = { name: string, value: any };
 

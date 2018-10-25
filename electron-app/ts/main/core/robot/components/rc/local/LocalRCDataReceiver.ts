@@ -1,10 +1,10 @@
 import { RCDataReceiver } from '../RCDataReceiver';
 
 import keypress = require('keypress');
-import { Logger } from '../../../../../../shared/Logger';
+import { Logger } from '../../../../../tools/misc/Logger';
 import { globalShortcut } from 'electron';
 import { KeyboardEventController, keyStates, KeyState } from '../../../../../tools/input/KeyboardEventController';
-import { SuccessCallback } from '../../../../../../shared/CommonTools';
+import { SuccessCallback } from '../../../../../tools/misc/CommonTools';
 import { RCData } from '../RCDataProcessor';
 import { Robot } from '../../../Robot';
 

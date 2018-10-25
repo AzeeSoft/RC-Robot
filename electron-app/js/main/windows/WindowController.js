@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const electron_1 = require("electron");
-const Logger_1 = require("../../shared/Logger");
+const Logger_1 = require("../tools/misc/Logger");
 const AppConfig_1 = require("../tools/misc/AppConfig");
 // A Global reference to a list of all controllers so that the windows don't get destroyed by GC. Also, it helps direct IPCMain events to the right window controller.
 let windowControllerDict = [];
@@ -61,7 +61,7 @@ class WindowController {
     }
     LoadRendererPage(rendererPage) {
         switch (AppConfig_1.AppConfig.rendererMode) {
-            case AppConfig_1.RendererMode.DEV_SERVER:
+            case AppConfig_1.RendererMode.SERVER:
                 this.window.loadURL('http://localhost:4200/' + rendererPage);
                 break;
             case AppConfig_1.RendererMode.FILE:

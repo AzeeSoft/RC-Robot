@@ -1,5 +1,5 @@
-import { Logger } from '../../../shared/Logger';
-import { SuccessCallback } from '../../../shared/CommonTools';
+import { Logger } from '../misc/Logger';
+import { SuccessCallback } from '../misc/CommonTools';
 import SerialPort = require('serialport');
 import Readline = require('@serialport/parser-readline')
 import { ErrorCallback } from 'serialport';

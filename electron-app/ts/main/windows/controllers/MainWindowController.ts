@@ -1,6 +1,6 @@
 import { WindowController } from "../WindowController";
 import { Robot } from '../../core/robot/Robot';
-import { Logger } from '../../../shared/Logger';
+import { Logger } from '../../tools/misc/Logger';
 
 export class MainWindowController extends WindowController {
 

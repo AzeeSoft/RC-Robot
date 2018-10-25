@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const CommonTools_1 = require("../../../shared/CommonTools");
+const CommonTools_1 = require("../misc/CommonTools");
 class KeyState {
     constructor(key) {
         this.isPressed = false;

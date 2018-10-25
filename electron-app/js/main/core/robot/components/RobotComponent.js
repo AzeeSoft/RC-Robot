@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const Logger_1 = require("../../../../shared/Logger");
+const Logger_1 = require("../../../tools/misc/Logger");
 class RobotComponent {
     constructor(name, robot, autoEnable, callback = (success) => { }) {
         this.name = "Robot Component";
