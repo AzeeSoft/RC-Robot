@@ -2,7 +2,7 @@
   "name": "rc-robot",
   "version": "0.1.0",
   "description": "Remote Controlled Home Robot App",
-  "main": "src/js/main/index.js",
+  "main": "electron-app/js/main/index.js",
   "scripts": {
     "dev-wp": "npm run development-wp",
     "development-wp": "webpack --progress --hide-modules",

@@ -3,14 +3,14 @@
         "target": "es6",
         "jsx": "react",
         "module": "commonjs",
-        "rootDir": "./src/ts/",
-        "outDir": "./src/js/",
+        "rootDir": "./electron-app/ts/",
+        "outDir": "./electron-app/js/",
     },
     "include": [
-        "./src/ts/**/*"
+        "./electron-app/ts/**/*"
     ],
     "exclude": [
         "node_modules",
-        "./src/ts/renderer/**/*"
+        "./electron-app/ts/renderer/**/*"
     ],
 }

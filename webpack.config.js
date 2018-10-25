@@ -17,9 +17,9 @@ module.exports = [];
 for (let rendererBundle in rendererBundles) {
     module.exports.push({
         mode: mode,
-        entry: './src/ts/renderer/' + rendererBundles[rendererBundle][0],
+        entry: './electron-app/ts/renderer/' + rendererBundles[rendererBundle][0],
         output: {
-            path: path.resolve(__dirname, 'src/js/renderer/bundles/'),
+            path: path.resolve(__dirname, 'electron-app/js/renderer/bundles/'),
             filename: rendererBundles[rendererBundle][1],
         },
         resolve: {
@@ -49,7 +49,7 @@ for (let rendererBundle in rendererBundles) {
 /* for (let styleBundle in styleBundles) {
     module.exports.push({
         mode: mode,
-        entry: './src/scss/' + styleBundles[styleBundle][0],
+        entry: './electron-app/scss/' + styleBundles[styleBundle][0],
         output: {
             path: path.resolve(__dirname, 'src/css/bundles/'),
             filename: styleBundles[styleBundle][1],
