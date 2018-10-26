@@ -3,7 +3,6 @@ import { Robot } from '../../core/robot/Robot';
 import { Logger } from '../../tools/misc/Logger';
 
 export class MainWindowController extends WindowController {
-
     private robot: Robot;
 
     constructor() {
@@ -17,7 +16,7 @@ export class MainWindowController extends WindowController {
 
         this.robot = Robot.getInstance();
 
-        this.LoadRendererPage("index.html");
+        this.loadMainPage();
 
         this.window.on('ready-to-show', () => {
 
@@ -26,6 +25,14 @@ export class MainWindowController extends WindowController {
         this.window.on('close', () => {
             this.robot.destroy();
         });
+    }
+
+    private loadMainPage() {
+        this.LoadRendererPage("index.html");
+    }
+
+    public reloadWindow() {
+        this.loadMainPage();
     }
 
     public onRendererDataReceived(channel: string, event: any, data: any) {

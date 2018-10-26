@@ -4,6 +4,8 @@ import { Logger } from '../tools/misc/Logger';
 import { AppInstance } from '../core/app/AppInstance';
 import { AppConfig, RendererMode } from '../tools/config/AppConfig';
 
+const path = require('path');
+
 // A Global reference to a list of all controllers so that the windows don't get destroyed by GC. Also, it helps direct IPCMain events to the right window controller.
 let windowControllerDict: WindowController[] = [];
 
@@ -90,5 +92,6 @@ export abstract class WindowController {
         }
     }
 
+    public abstract reloadWindow();
     public abstract onRendererDataReceived(channel: string, event: any, data: any);
 }

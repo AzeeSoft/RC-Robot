@@ -1,5 +1,7 @@
-<span>{{input}}</span>
-<br>
-<input [(ngModel)]="input">
-<br/>
-<button>Send</button>
+<div>
+  <mat-form-field appearance="outline">
+    <mat-label>Enter command here</mat-label>
+    <input matInput placeholder="Placeholder">
+    <mat-hint>Hint</mat-hint>
+  </mat-form-field>
+</div>

@@ -40,11 +40,19 @@ export class AppInstance {
             let windowControllerId = args[0];
             let channel = args[1];
             let data = args[2];
-            WindowController.getWindowController(windowControllerId).onRendererDataReceived(
-                channel,
-                event,
-                data
+
+            let windowController: WindowController = WindowController.getWindowController(
+                windowControllerId
             );
+
+            switch (channel) {
+                case 'reloadWindow':
+                    windowController.reloadWindow();
+                    break;
+                default:
+                    windowController.onRendererDataReceived(channel, event, data);
+                    break;
+            }
         });
 
         ipcMain.on('keyboardEvent', (event, ...args: any[]) => {

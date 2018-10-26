@@ -1,8 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 
 import * as Mousetrap from 'mousetrap';
+require('mousetrap-global-bind');
+
 import { ipcRenderer } from 'electron';
 import { Logger } from '../tools/misc/Logger';
+import { Router, ActivatedRoute } from '@angular/router';
+import { windowConnection } from 'src/tools/misc/WindowConnection';
 
 @Component({
   selector: 'app-root',
@@ -12,9 +16,13 @@ import { Logger } from '../tools/misc/Logger';
 export class AppComponent implements OnInit {
   title = 'RC Robot';
 
+  constructor(private route: ActivatedRoute) {}
+
   ngOnInit(): void {
     Logger.debug('Starting to listen...');
     this.listenToKeyboardEvents();
+
+    Logger.debug(this.route);
   }
 
   listenToKeyboardEvents() {
@@ -32,5 +40,12 @@ export class AppComponent implements OnInit {
       const self = this;
       return self._handleKey.apply(self, arguments);
     };
+
+    Mousetrap.bindGlobal(['ctrl+r', 'ctrl+shift+r', 'command+r', 'command+shift+r'], (e, combo) => {
+      Logger.debug('reloading...');
+      windowConnection.sendDataToWindow('reloadWindow', {});
+
+      return false;
+    });
   }
 }

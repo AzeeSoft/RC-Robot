@@ -1,12 +1,13 @@
-import { NgModule } from '@angular/core';
+import { NgModule, Type, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
 import { CommandInterfaceComponent } from './components/command-interface/command-interface.component';
+import { MaterialModule } from '../helpers/material/material.module';
 
 @NgModule({
-  imports: [CommonModule, FormsModule, BrowserAnimationsModule],
+  imports: [
+    CommonModule,
+    MaterialModule
+  ],
   declarations: [CommandInterfaceComponent],
   exports: [CommandInterfaceComponent],
 })
