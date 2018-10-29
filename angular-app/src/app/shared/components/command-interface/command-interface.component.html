@@ -1,7 +1,11 @@
 <div>
+  <mat-list class="">
+    <mat-list-item>asdas</mat-list-item>
+  </mat-list>
+
   <mat-form-field appearance="outline">
     <mat-label>Enter command here</mat-label>
-    <input matInput placeholder="Placeholder">
+    <input matInput placeholder="Placeholder" (keyup)="onInputTyped($event)">
     <mat-hint>Hint</mat-hint>
   </mat-form-field>
 </div>
