@@ -8,7 +8,7 @@ export enum RendererMode {
   FILE
 }
 
-export let AppConfig = {
+export let appConfig = {
   appMode: AppMode.DEBUG,
   rendererMode: RendererMode.FILE,
 }

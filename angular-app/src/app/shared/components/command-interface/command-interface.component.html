@@ -1,11 +1,13 @@
 <div>
   <mat-list class="">
-    <mat-list-item>asdas</mat-list-item>
+    <mat-list-item *ngFor="let screenMessage of commandInterfaceService.commandInterfaceDataList[commandClientId].screenMessages">
+      {{screenMessage}}
+    </mat-list-item>
   </mat-list>
 
   <mat-form-field appearance="outline">
     <mat-label>Enter command here</mat-label>
-    <input matInput placeholder="Placeholder" (keyup)="onInputTyped($event)">
+    <input matInput placeholder="Enter command here" [(ngModel)]="command" (keyup)="onInputTyped($event)">
     <mat-hint>Hint</mat-hint>
   </mat-form-field>
 </div>

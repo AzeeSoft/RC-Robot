@@ -1,49 +1,122 @@
+import { Logger } from '../../tools/misc/Logger';
+import { CommandClient } from './CommandClient';
+
 export type CommandFormat = {
     commandName: string;
     args: string[];
 };
 
+export type InternalCommandCallback = (commandClient: CommandClient, ...args) => void;
+
 export abstract class CommandProcessor {
-    protected internalCommandProcessors: ((...args) => void)[] = [];
-    protected externalCommandProcessors: CommandProcessor[] = [];
+    private internalCommandProcessors: InternalCommandCallback[] = [];
+    private externalCommandProcessors: CommandProcessor[] = [];
 
-    delegatedProcessor: CommandProcessor = null;
+    constructor() {
+        this.initInternalCommands();
+    }
 
-    processCommand(command: string): void {
-        if (this.delegatedProcessor != null) {
-            this.delegatedProcessor.processCommand(command);
-        } else {
-            let formattedCommand: CommandFormat = this.formatCommand(command);
+    processCommand(commandClient: CommandClient, command: string): void {
+        Logger.debug('Processing command: ' + command);
 
-            if (this.isInternalCommand(formattedCommand.commandName)) {
-                this.internalCommandProcessors[formattedCommand.commandName]();
-            } else if (this.isExternalCommand(formattedCommand.commandName)) {
-                this.externalCommandProcessors[formattedCommand.commandName].processCommand();
-                if (formattedCommand.args.length == 0) {
-                  // TODO: Check if the processor can be deletegated (maybe?)
-                  this.delegatedProcessor = this.externalCommandProcessors[formattedCommand.commandName];
+        let commandClientState = commandClient.getState();
+
+        let selectedProcessor: CommandProcessor = this;
+        if (commandClientState.subCommandChain.length > 0) {
+            for (let i = 0; i < commandClientState.subCommandChain.length; i++) {
+                let subCommand = commandClientState.subCommandChain[i];
+
+                if (selectedProcessor.isExternalCommand(subCommand)) {
+                    selectedProcessor = selectedProcessor[command];
+                } else {
+                    selectedProcessor = this;
+                    break;
                 }
             }
         }
 
-        this.returnControl();
+        let formattedCommand: CommandFormat = CommandProcessor.formatCommand(command);
+
+        let isSearchingForCommand = true;
+        let pendingSubCommands: string[] = [];
+        while (isSearchingForCommand) {
+            if (selectedProcessor.isInternalCommand(formattedCommand.commandName)) {
+                selectedProcessor.internalCommandProcessors[formattedCommand.commandName](commandClient, formattedCommand.args);
+
+                isSearchingForCommand = false;
+            } else if (selectedProcessor.isExternalCommand(formattedCommand.commandName)) {
+                if (formattedCommand.args.length == 0) {
+                    // TODO: Check if the next processor can be deletegated (maybe?)
+
+                    pendingSubCommands.forEach(pendingSubCommand => {
+                        commandClientState.addSubCommand(pendingSubCommand);
+                    });
+                    commandClientState.addSubCommand(formattedCommand.commandName);
+
+                    isSearchingForCommand = false;
+                } else {
+                    selectedProcessor = this.externalCommandProcessors[
+                        formattedCommand.commandName
+                    ];
+
+                    pendingSubCommands.push(formattedCommand.commandName);
+                    formattedCommand.commandName = formattedCommand.args.shift();
+                }
+            } else {
+                // TODO: Send 'command not found' message.
+                isSearchingForCommand = false;
+            }
+        }
+
+        commandClient.returnControl();
     }
 
     isInternalCommand(commandName: string): boolean {
-        return commandName in this.internalCommandProcessors;
+        return (
+            commandName in this.internalCommandProcessors &&
+            this.internalCommandProcessors[commandName] != null
+        );
     }
 
     isExternalCommand(commandName: string): boolean {
-        return commandName in this.externalCommandProcessors;
+        return (
+            commandName in this.externalCommandProcessors &&
+            this.externalCommandProcessors[commandName] != null
+        );
     }
 
-    formatCommand(command: string): CommandFormat {
-        let formattedCommand: CommandFormat;
+    static formatCommand(command: string): CommandFormat {
+        let formattedCommand: CommandFormat = {
+            commandName: '',
+            args: [],
+        };
 
-        // TODO: Split the words and initialize formattedCommand
+        let tokens: string[] = command.split(' ');
+        tokens = tokens.map(token => {
+            return token.trim();
+        });
+
+        formattedCommand.commandName = tokens.shift();
+        formattedCommand.args = tokens;
 
         return formattedCommand;
     }
 
-    private returnControl(): void {}
+    protected addInternalCommand(commandName: string, processorCallback: InternalCommandCallback) {
+        if (!this.isInternalCommand(commandName)) {
+            this.internalCommandProcessors[commandName] = processorCallback;
+        } else {
+            Logger.debug('Internal Command exists: ' + commandName);
+        }
+    }
+
+    protected addExternalCommand(commandName: string, commandProcessor: CommandProcessor) {
+        if (!this.isExternalCommand(commandName)) {
+            this.externalCommandProcessors[commandName] = commandProcessor;
+        } else {
+            Logger.debug('External Command exists: ' + commandName);
+        }
+    }
+
+    protected abstract initInternalCommands(): void;
 }

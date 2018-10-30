@@ -5,6 +5,7 @@
         "module": "commonjs",
         "rootDir": "./electron-app/ts/",
         "outDir": "./electron-app/js/",
+        "sourceMap": true,
     },
     "include": [
         "./electron-app/ts/**/*"

@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Logger } from 'src/tools/misc/Logger';
+import { ipcRenderer } from 'electron';
+import { CommandInterfaceService } from '../../services/command-interface/command-interface.service';
 
 @Component({
   selector: 'app-command-interface',
@@ -7,13 +9,23 @@ import { Logger } from 'src/tools/misc/Logger';
   styleUrls: ['./command-interface.component.scss'],
 })
 export class CommandInterfaceComponent implements OnInit {
-  public input: string;
+  @Input()
+  public command: string;
 
-  constructor() {}
+  public commandClientId: number;
 
-  ngOnInit() {}
+  constructor(public commandInterfaceService: CommandInterfaceService) {}
 
-  sendCommand() {}
+  ngOnInit() {
+    this.commandClientId = this.commandInterfaceService.createNewCommandClient();
+  }
+
+  // TODO: Send a on destroy event to main process to free up the command client.
+
+  sendCommand() {
+    this.commandInterfaceService.sendCommand(this.commandClientId, this.command);
+    this.command = '';
+  }
 
   onInputTyped(e) {
     // Logger.debug(e);

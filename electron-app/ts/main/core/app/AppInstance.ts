@@ -1,9 +1,13 @@
 import { MainWindowController } from '../../windows/controllers/MainWindowController';
-import { app, ipcMain } from 'electron';
+import { app, ipcMain, ipcRenderer, remote, WebContents, Event } from 'electron';
 import { WindowController } from '../../windows/WindowController';
 import { KeyboardEventController } from '../../tools/input/KeyboardEventController';
+import { appConfig, AppMode } from '../../tools/config/AppConfig';
+import { MainCommandProcessor } from '../command/MainCommandProcessor';
+import { CommandClient, CommandClientData } from '../command/CommandClient';
 
 import Serialport = require('serialport');
+import { Logger } from '../../tools/misc/Logger';
 
 export class AppInstance {
     private static instance = null;
@@ -17,6 +21,7 @@ export class AppInstance {
     }
 
     private isRunning: boolean = false;
+    private rendererCommandClient: RendererCommandClient = null;
 
     public start(): boolean {
         if (this.isRunning) {
@@ -33,6 +38,18 @@ export class AppInstance {
             app.quit();
         });
 
+        this.setupRenderer();
+
+        this.isRunning = true;
+    }
+
+    private createMainWindow() {
+        let mainWindowController = new MainWindowController();
+        mainWindowController.showWindow();
+    }
+
+    private setupRenderer() {
+        // Sync or Async
         ipcMain.on('windowData', (event, ...args: any[]) => {
             // Logger.log(event);
             // Logger.log(args);
@@ -47,7 +64,9 @@ export class AppInstance {
 
             switch (channel) {
                 case 'reloadWindow':
-                    windowController.reloadWindow();
+                    if (appConfig.appMode == AppMode.DEBUG) {
+                        windowController.reloadWindow();
+                    }
                     break;
                 default:
                     windowController.onRendererDataReceived(channel, event, data);
@@ -55,6 +74,7 @@ export class AppInstance {
             }
         });
 
+        // Async
         ipcMain.on('keyboardEvent', (event, ...args: any[]) => {
             // Logger.log(event);
             // Logger.log(args);
@@ -63,6 +83,7 @@ export class AppInstance {
             KeyboardEventController.onKeyboardEventReceived(data.ch, data.modifiers, data.event);
         });
 
+        // Sync
         ipcMain.on('getSerialPortList', (event, ...args: any[]) => {
             Serialport.list().then(ports => {
                 event.returnValue = ports;
@@ -70,11 +91,47 @@ export class AppInstance {
             });
         });
 
-        this.isRunning = true;
+        // Sync
+        ipcMain.on('newCommandClient', (event, ...args: any[]) => {
+            let commandClient: RendererCommandClient = new RendererCommandClient(event.sender);
+            event.returnValue = commandClient.getId();
+        });
+
+        // Sync
+        ipcMain.on('command', (event, ...args: any[]) => {
+            let commandClientId: number = args[0];
+            let rendererCommandClient: RendererCommandClient = CommandClient.getCommandClient(
+                commandClientId
+            ) as RendererCommandClient;
+
+            if (rendererCommandClient !== null) {
+                rendererCommandClient.setPendingRendererEvent(event);
+
+                let command = args[1];
+                MainCommandProcessor.getInstance().processCommand(rendererCommandClient, command);
+            }
+        });
+    }
+}
+
+class RendererCommandClient extends CommandClient {
+    sender: WebContents;
+    pendingRendererEvent: Event;
+
+    constructor(sender: WebContents) {
+        super();
+        this.sender = sender;
     }
 
-    private createMainWindow() {
-        let mainWindowController = new MainWindowController();
-        mainWindowController.showWindow();
+    public setPendingRendererEvent(e: Event) {
+        this.pendingRendererEvent = e;
+    }
+
+    public sendData(data: CommandClientData) {
+        this.sender.send('commandClientData', this.getId(), data);
+    }
+
+    public returnControl() {
+        this.pendingRendererEvent.returnValue = this.getState().getSubCommandChainDescriptor();
     }
 }

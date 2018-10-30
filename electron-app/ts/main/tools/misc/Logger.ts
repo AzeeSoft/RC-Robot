@@ -1,8 +1,8 @@
-import { AppConfig, AppMode } from '../config/AppConfig';
+import { appConfig, AppMode } from '../config/AppConfig';
 
 export class Logger {
     public static debug(message: any) {
-        if (AppConfig.appMode == AppMode.DEBUG) {
+        if (appConfig.appMode == AppMode.DEBUG) {
             console.log(message);
         }
     }

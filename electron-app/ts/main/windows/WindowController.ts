@@ -2,7 +2,7 @@ import { BrowserWindow, BrowserWindowConstructorOptions } from 'electron';
 import { CommonTools } from '../tools/misc/CommonTools';
 import { Logger } from '../tools/misc/Logger';
 import { AppInstance } from '../core/app/AppInstance';
-import { AppConfig, RendererMode } from '../tools/config/AppConfig';
+import { appConfig, RendererMode } from '../tools/config/AppConfig';
 
 const path = require('path');
 
@@ -82,7 +82,7 @@ export abstract class WindowController {
     }
 
     public LoadRendererPage(rendererPage: string) {
-        switch (AppConfig.rendererMode) {
+        switch (appConfig.rendererMode) {
             case RendererMode.SERVER:
                 this.window.loadURL('http://localhost:4200/' + rendererPage);
                 break;
