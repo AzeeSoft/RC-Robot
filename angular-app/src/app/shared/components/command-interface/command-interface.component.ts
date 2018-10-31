@@ -1,7 +1,17 @@
-import { Component, OnInit, Input } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { Logger } from 'src/tools/misc/Logger';
 import { ipcRenderer } from 'electron';
-import { CommandInterfaceService } from '../../services/command-interface/command-interface.service';
+import { CommandClientData } from '../../services/command-interface/command-interface.service';
+import {
+  CommandInterfaceService,
+  CommandInterface,
+} from '../../services/command-interface/command-interface.service';
 
 @Component({
   selector: 'app-command-interface',
@@ -11,19 +21,24 @@ import { CommandInterfaceService } from '../../services/command-interface/comman
 export class CommandInterfaceComponent implements OnInit {
   @Input()
   public command: string;
+  public commandInterface: CommandInterface;
 
-  public commandClientId: number;
-
-  constructor(public commandInterfaceService: CommandInterfaceService) {}
+  constructor(
+    public commandInterfaceService: CommandInterfaceService,
+    private changeDetectorRef: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
-    this.commandClientId = this.commandInterfaceService.createNewCommandClient();
+    this.commandInterface = this.commandInterfaceService.createNewCommandClient();
+    this.commandInterface.subscribe((data: CommandClientData) => {
+      this.changeDetectorRef.detectChanges();
+    });
   }
 
   // TODO: Send a on destroy event to main process to free up the command client.
 
   sendCommand() {
-    this.commandInterfaceService.sendCommand(this.commandClientId, this.command);
+    this.commandInterface.sendCommand(this.command);
     this.command = '';
   }
 

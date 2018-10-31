@@ -1,6 +1,6 @@
 <div>
   <mat-list class="">
-    <mat-list-item *ngFor="let screenMessage of commandInterfaceService.commandInterfaceDataList[commandClientId].screenMessages">
+    <mat-list-item *ngFor="let screenMessage of this.commandInterface.screenMessages">
       {{screenMessage}}
     </mat-list-item>
   </mat-list>

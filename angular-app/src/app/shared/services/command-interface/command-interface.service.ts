@@ -6,46 +6,38 @@ import { Logger } from 'src/tools/misc/Logger';
   providedIn: 'root',
 })
 export class CommandInterfaceService {
-  public commandInterfaceDataList: CommandInterfaceData[] = [];
+  public commandInterfaceList: CommandInterface[] = [];
 
   constructor() {
     ipcRenderer.on('commandClientData', (event, ...args) => {
       const commandClientId: number = args[0];
-      if (commandClientId in this.commandInterfaceDataList) {
-        this.commandInterfaceDataList[commandClientId].onDataReceived(args[1]);
+      if (commandClientId in this.commandInterfaceList) {
+        this.commandInterfaceList[commandClientId].onDataReceived(args[1]);
       }
     });
   }
 
-  createNewCommandClient(): number {
+  createNewCommandClient(): CommandInterface {
     const newCommandClientId: number = ipcRenderer.sendSync('newCommandClient');
 
-    const commandInterfaceData = new CommandInterfaceData(newCommandClientId);
+    const commandInterface = new CommandInterface(newCommandClientId);
 
-    this.commandInterfaceDataList[commandInterfaceData.getClientId()] = commandInterfaceData;
+    this.commandInterfaceList[commandInterface.getClientId()] = commandInterface;
 
-    return commandInterfaceData.getClientId();
-  }
-
-  sendCommand(commandClientId: number, command: string) {
-    command = command.trim();
-    if (command !== '') {
-      const commandInterfaceData = this.commandInterfaceDataList[commandClientId];
-      commandInterfaceData.onCommandEntered(command);
-      commandInterfaceData.subCommandChainDescriptor = ipcRenderer.sendSync('command', commandClientId, command);
-    }
+    return commandInterface;
   }
 }
 
-interface CommandClientData {
+export interface CommandClientData {
   message: string;
 }
 
-export class CommandInterfaceData {
+export class CommandInterface {
   public subCommandChainDescriptor = '';
   public screenMessages: string[] = [];
 
   private clientId: number;
+  private dataReceivedCallback: (data: CommandClientData) => void;
 
   constructor(clientId: number) {
     this.clientId = clientId;
@@ -57,9 +49,25 @@ export class CommandInterfaceData {
 
   public onDataReceived(data: CommandClientData) {
     this.screenMessages.push(data.message);
+    if (this.dataReceivedCallback) {
+      this.dataReceivedCallback(data);
+    }
   }
 
   public onCommandEntered(command: string) {
-    this.screenMessages.push(this.subCommandChainDescriptor + '> ' + command);
+    const commandScreenMessage = this.subCommandChainDescriptor + '> ' + command;
+    this.screenMessages.push(commandScreenMessage);
+  }
+
+  sendCommand(command: string) {
+    command = command.trim();
+    if (command !== '') {
+      this.onCommandEntered(command);
+      this.subCommandChainDescriptor = ipcRenderer.sendSync('command', this.clientId, command);
+    }
+  }
+
+  public subscribe(callback: (data: CommandClientData) => void) {
+    this.dataReceivedCallback = callback;
   }
 }
