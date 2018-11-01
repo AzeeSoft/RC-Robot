@@ -1,6 +1,6 @@
 import { Robot } from "../../Robot";
 import { Logger } from '../../../../tools/misc/Logger';
-import { RobotComponent } from "../RobotComponent";
+import { RobotComponent, RobotComponentCommandProcessor } from "../RobotComponent";
 import { SuccessCallback } from '../../../../tools/misc/CommonTools';
 
 export type RCData = { name: string, value: any };
@@ -8,7 +8,7 @@ export type RCData = { name: string, value: any };
 export class RCDataProcessor extends RobotComponent {
 
     constructor(robot: Robot) {
-        super("RC Data Processor", robot, true);
+        super("RC Data Processor", 'rcDataProcessor', robot, true);
         this.robot = robot
     }
 
@@ -52,5 +52,9 @@ export class RCDataProcessor extends RobotComponent {
 
     protected onDisable(callback: SuccessCallback, ...args) {
         callback(true);
+    }
+
+    public initCommands(robotComponentCommandProcessor: RobotComponentCommandProcessor) {
+
     }
 }

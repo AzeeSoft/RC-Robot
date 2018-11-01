@@ -1,4 +1,4 @@
-import { RobotComponent } from "../RobotComponent";
+import { RobotComponent, RobotComponentCommandProcessor } from "../RobotComponent";
 import { RCDataProcessor, RCData } from './RCDataProcessor';
 
 type RCDataReceivedCallback = (data: object) => void;
@@ -14,5 +14,9 @@ export abstract class RCDataReceiver extends RobotComponent {
     public onRCDataReceived(rcData: RCData) {
         this.robot.rcDataProcessor.processRCData(rcData);
         this.dataReceivedCallback(rcData);
+    }
+
+    public initCommands(robotComponentCommandProcessor: RobotComponentCommandProcessor) {
+
     }
 }

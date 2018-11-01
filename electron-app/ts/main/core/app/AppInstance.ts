@@ -9,6 +9,7 @@ import { CommandClient, CommandClientData } from '../command/CommandClient';
 import Serialport = require('serialport');
 import { RendererCommandClient } from '../command/commandClients/RendererCommandClient';
 import { RootDataInitializer } from './RootDataInitializer';
+import { CommandProcessor } from '../command/CommandProcessor';
 
 export class AppInstance {
     private static instance = null;
@@ -111,7 +112,7 @@ export class AppInstance {
                 rendererCommandClient.setPendingRendererEvent(event);
 
                 let command = args[1];
-                MainCommandProcessor.getInstance().processCommand(rendererCommandClient, command);
+                CommandProcessor.getCommandProcessor('main').processCommand(rendererCommandClient, command);
             }
         });
     }

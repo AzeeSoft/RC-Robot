@@ -7,13 +7,14 @@ import { KeyboardEventController, keyStates, KeyState } from '../../../../../too
 import { SuccessCallback } from '../../../../../tools/misc/CommonTools';
 import { RCData } from '../RCDataProcessor';
 import { Robot } from '../../../Robot';
+import { RobotComponentCommandProcessor } from '../../RobotComponent';
 
 export class LocalRCDataReceiver extends RCDataReceiver {
 
     private keyboardEventCallback;
 
     constructor(robot: Robot) {
-        super("RC Data Receiver", robot, false);
+        super("RC Data Receiver", 'localRCDataReceiver', robot, false);
 
         this.keyboardEventCallback = (key: string, modifiers: any[], event: any) => {
             // Logger.log("Keyboard Event: ");
@@ -89,5 +90,9 @@ export class LocalRCDataReceiver extends RCDataReceiver {
     protected onDisable(callback: SuccessCallback, ...args) {
         this.stopListeningForLocalInput();
         callback(true);
+    }
+
+    public initCommands(robotComponentCommandProcessor: RobotComponentCommandProcessor) {
+        super.initCommands(robotComponentCommandProcessor);
     }
 }

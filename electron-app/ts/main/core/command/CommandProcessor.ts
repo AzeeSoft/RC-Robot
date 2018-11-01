@@ -1,6 +1,6 @@
 import { Logger } from '../../tools/misc/Logger';
 import { CommandClient, CommandClientData } from './CommandClient';
-import { RobotComponentCommandProcessor } from './primaryCommandProcessors/RobotComponentCommandProcessor';
+import { PrimaryRobotComponentCommandProcessor } from './primaryCommandProcessors/PrimaryRobotComponentCommandProcessor';
 import { MainCommandProcessor } from './primaryCommandProcessors/MainCommandProcessor';
 
 export type CommandFormat = {
@@ -11,17 +11,47 @@ export type CommandFormat = {
 export type CommandCallback = (commandClient: CommandClient, ...args) => void;
 
 export abstract class CommandProcessor {
-    private reservedCommandProcessors: CommandCallback[] = [];
+    private static processorInstances: CommandProcessor[] = [];
 
+    public static hasCommandProcessor(name: string) {
+        return (
+            name in CommandProcessor.processorInstances &&
+            CommandProcessor.processorInstances[name] != null
+        );
+    }
+
+    public static addCommandProcessor(commandProcessor: CommandProcessor) {
+        if (!CommandProcessor.hasCommandProcessor(commandProcessor.name)) {
+            CommandProcessor.processorInstances[commandProcessor.name] = commandProcessor;
+        } else {
+            Logger.debug(`Command Processor already exists : ${commandProcessor.name}`);
+        }
+    }
+
+    public static getCommandProcessor(name: string): CommandProcessor {
+        if (CommandProcessor.hasCommandProcessor(name)) {
+            return CommandProcessor.processorInstances[name];
+        }
+
+        Logger.debug(`Cannot find Command Processor: ${name}`);
+        return null;
+    }
+
+    public readonly name: string = '';
+
+    private reservedCommandProcessors: CommandCallback[] = [];
     private internalCommandProcessors: CommandCallback[] = [];
     private externalCommandProcessors: CommandProcessor[] = [];
 
-    constructor() {
-        this.initInternalCommands();
+    constructor(name: string) {
+        this.name = name;
+        CommandProcessor.addCommandProcessor(this);
 
         this.addReservedCommand('?', this.showHelp);
         this.addReservedCommand('help', this.showHelp);
         this.addReservedCommand('exit', this.exitSubChain);
+
+        this.initInternalCommands();
     }
 
     processCommand(commandClient: CommandClient, command: string): void {

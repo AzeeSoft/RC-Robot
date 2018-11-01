@@ -1,5 +1,5 @@
 
-import { RobotComponent } from '../RobotComponent';
+import { RobotComponent, RobotComponentCommandProcessor } from '../RobotComponent';
 import { SuccessCallback } from '../../../../tools/misc/CommonTools';
 import { Logger } from '../../../../tools/misc/Logger';
 import { ArduinoComponent } from '../arduino/ArduinoComponent';
@@ -8,7 +8,7 @@ import { Robot } from '../../Robot';
 export class SimpleDrivingComponent extends RobotComponent {
 
     constructor(robot: Robot) {
-        super("Driving Component", robot, true);
+        super("Driving Component", 'simpleDriving', robot, true);
     }
 
     public drive(hor: number, ver: number) {
@@ -28,5 +28,9 @@ export class SimpleDrivingComponent extends RobotComponent {
 
     protected onDisable(callback: SuccessCallback, ...args) {
         callback(true);
+    }
+
+    public initCommands(robotComponentCommandProcessor: RobotComponentCommandProcessor) {
+
     }
 }

@@ -1,12 +1,11 @@
 import { CommandProcessor } from '../CommandProcessor';
 import { MainCommandProcessor } from './MainCommandProcessor';
 import { CommandClient, CommandClientData } from '../CommandClient';
-import { RobotComponent } from '../../robot/components/RobotComponent';
 
-export class RobotComponentCommandProcessor extends CommandProcessor {
+export class PrimaryRobotComponentCommandProcessor extends CommandProcessor {
     constructor() {
-        super();
-        MainCommandProcessor.getInstance().addExternalCommand('component', this);
+        super('primaryRobotComponent');
+        CommandProcessor.getCommandProcessor('main').addExternalCommand('component', this);
     }
 
     protected initInternalCommands(): void {

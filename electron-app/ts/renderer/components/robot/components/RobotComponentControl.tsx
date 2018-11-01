@@ -2,7 +2,6 @@ import * as React from 'react';
 import Button from '@material-ui/core/Button';
 import { Icon, PropTypes, Dialog, DialogTitle, DialogActions } from '@material-ui/core';
 import { AZComponent } from '../../AZComponent';
-import { Logger } from '../../../../shared/Logger';
 import { RobotInterface } from '../RobotInterface';
 
 const styles = theme => {
@@ -12,7 +11,7 @@ const styles = theme => {
 };
 
 export type RobotComponentControlProps = {
-    
+
 } & Partial<DefaultProps>;
 
 type DefaultProps = Readonly<typeof defaultProps>;
@@ -36,7 +35,7 @@ export abstract class RobotComponentControl<P = {}, S = {}> extends AZComponent<
     static defaultProps: DefaultProps = defaultProps;
 
     state = defaultState as RobotComponentControlState & S;
-    
+
     name: string = '';
     icon: string = '';
     color: PropTypes.Color = 'primary';

@@ -1,5 +1,5 @@
-import { RobotComponent } from "../RobotComponent";
-import { ArduinoController } from "./ArduinoController";
+import { RobotComponent, RobotComponentCommandProcessor } from '../RobotComponent';
+import { ArduinoController } from './ArduinoController';
 import { Logger } from '../../../../tools/misc/Logger';
 import { SuccessCallback } from '../../../../tools/misc/CommonTools';
 import { Robot } from '../../Robot';
@@ -8,7 +8,7 @@ export class ArduinoComponent extends RobotComponent {
     private arduinoController: ArduinoController;
 
     constructor(robot: Robot) {
-        super("Arduino Component", robot, false);
+        super('Arduino Component', 'arduino', robot, false);
         this.arduinoController = new ArduinoController();
     }
 
@@ -22,18 +22,25 @@ export class ArduinoComponent extends RobotComponent {
 
     protected onEnable(callback: SuccessCallback, portPath: string) {
         this.arduinoController.setPortPath(portPath);
-        this.arduinoController.connect(() => {
-            callback(true);
-        }, (error) => {
-            if (error) {
-                callback(false, error.name + ': ' + error.message);
+        this.arduinoController.connect(
+            () => {
+                callback(true);
+            },
+            error => {
+                if (error) {
+                    callback(false, error.name + ': ' + error.message);
+                }
             }
-        });
+        );
     }
 
     protected onDisable(callback: SuccessCallback, ...args) {
-        this.arduinoController.close((success) => {
+        this.arduinoController.close(success => {
             callback(success);
         });
+    }
+
+    public initCommands(robotComponentCommandProcessor: RobotComponentCommandProcessor) {
+
     }
 }

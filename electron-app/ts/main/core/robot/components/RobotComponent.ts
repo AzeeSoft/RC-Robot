@@ -1,19 +1,29 @@
 import { SuccessCallback } from '../../../tools/misc/CommonTools';
 import { Logger } from '../../../tools/misc/Logger';
 import { Robot } from '../Robot';
+import { CommandProcessor } from '../../command/CommandProcessor';
+import { CommandClient, CommandClientData } from '../../command/CommandClient';
+import { MainCommandProcessor } from '../../command/primaryCommandProcessors/MainCommandProcessor';
 
 export abstract class RobotComponent {
-
-    public readonly name: string = "Robot Component";
+    public readonly name: string = 'Robot Component';
 
     private _isEnabled = false;
     private isEnablePending = false;
 
     protected robot: Robot;
+    protected commandProcessor: RobotComponentCommandProcessor;
 
-    constructor(name: string, robot: Robot, autoEnable: boolean, callback: SuccessCallback = (success) => {}) {
+    constructor(
+        name: string,
+        commandName: string,
+        robot: Robot,
+        autoEnable: boolean,
+        callback: SuccessCallback = success => {}
+    ) {
         this.name = name;
         this.robot = robot;
+        this.commandProcessor = new RobotComponentCommandProcessor(commandName, this);
 
         if (autoEnable) {
             this.enable(callback);
@@ -87,4 +97,50 @@ export abstract class RobotComponent {
      * @returns true if the component was successfully disabled. false otherwise
      */
     protected abstract onDisable(callback: SuccessCallback, ...args);
+
+    public abstract initCommands(componentCommandProcessor: RobotComponentCommandProcessor);
+}
+
+export class RobotComponentCommandProcessor extends CommandProcessor {
+    public readonly robotComponent: RobotComponent;
+
+    constructor(name: string, robotComponent: RobotComponent) {
+        super(name);
+        this.robotComponent = robotComponent;
+        this.robotComponent.initCommands(this);
+
+        CommandProcessor.getCommandProcessor('primaryRobotComponent').addExternalCommand(
+            this.name,
+            this
+        );
+    }
+
+    protected initInternalCommands(): void {
+        this.addInternalCommand('enable', this.enableComponent);
+        this.addInternalCommand('disable', this.disableComponent);
+    }
+
+    enableComponent(commandClient: CommandClient, ...args) {
+        this.robotComponent.enable((success, msg) => {
+            const data = new CommandClientData();
+            if (success) {
+                data.message = `${this.robotComponent.name} enabled: ${msg}`;
+            } else {
+                data.message = `Cannot enable ${this.robotComponent.name}: ${msg}`;
+            }
+            commandClient.sendData(data);
+        }, ...args);
+    }
+
+    disableComponent(commandClient: CommandClient, ...args) {
+        this.robotComponent.disable((success, msg) => {
+            const data = new CommandClientData();
+            if (success) {
+                data.message = `${this.robotComponent.name} disabled: ${msg}`;
+            } else {
+                data.message = `Cannot disable ${this.robotComponent.name}: ${msg}`;
+            }
+            commandClient.sendData(data);
+        }, ...args);
+    }
 }
