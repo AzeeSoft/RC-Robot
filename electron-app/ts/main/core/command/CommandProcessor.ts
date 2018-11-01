@@ -82,7 +82,7 @@ export abstract class CommandProcessor {
                 selectedProcessor.reservedCommandProcessors[formattedCommand.commandName].call(
                     selectedProcessor,
                     commandClient,
-                    formattedCommand.args
+                    ...formattedCommand.args
                 );
 
                 isSearchingForCommand = false;
@@ -90,7 +90,7 @@ export abstract class CommandProcessor {
                 selectedProcessor.internalCommandProcessors[formattedCommand.commandName].call(
                     selectedProcessor,
                     commandClient,
-                    formattedCommand.args
+                    ...formattedCommand.args
                 );
 
                 isSearchingForCommand = false;
@@ -105,7 +105,7 @@ export abstract class CommandProcessor {
 
                     isSearchingForCommand = false;
                 } else {
-                    selectedProcessor = this.externalCommandProcessors[
+                    selectedProcessor = selectedProcessor.externalCommandProcessors[
                         formattedCommand.commandName
                     ];
 
@@ -169,7 +169,7 @@ export abstract class CommandProcessor {
         }
     }
 
-    protected addInternalCommand(commandName: string, processorCallback: CommandCallback) {
+    public addInternalCommand(commandName: string, processorCallback: CommandCallback) {
         if (!this.isInternalCommand(commandName)) {
             this.internalCommandProcessors[commandName] = processorCallback;
         } else {
@@ -210,8 +210,14 @@ export abstract class CommandProcessor {
         const data: CommandClientData = new CommandClientData();
 
         let commands = '';
-        this.getSupportedCommands().forEach(command => {
+        this.getInternalCommands().forEach(command => {
             commands += `- ${command}\n`;
+        });
+        this.getExternalCommands().forEach(command => {
+            commands += `- ${command} (Ext)\n`;
+        });
+        this.getReservedCommands().forEach(command => {
+            commands += `- ${command} (Res)\n`;
         });
 
         data.message =
