@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ipcRenderer, ipcMain } from 'electron';
 import { Logger } from 'src/tools/misc/Logger';
+import { Observable, } from 'rxjs';
+import { EventEmitter } from 'events';
 
 @Injectable({
   providedIn: 'root',
@@ -9,12 +11,7 @@ export class CommandInterfaceService {
   public commandInterfaceList: CommandInterface[] = [];
 
   constructor() {
-    ipcRenderer.on('commandClientData', (event, ...args) => {
-      const commandClientId: number = args[0];
-      if (commandClientId in this.commandInterfaceList) {
-        this.commandInterfaceList[commandClientId].onDataReceived(args[1]);
-      }
-    });
+    this.listenForCommandClientData();
   }
 
   createNewCommandClient(): CommandInterface {
@@ -25,6 +22,15 @@ export class CommandInterfaceService {
     this.commandInterfaceList[commandInterface.getClientId()] = commandInterface;
 
     return commandInterface;
+  }
+
+  listenForCommandClientData() {
+    ipcRenderer.on('commandClientData', (event, ...args) => {
+      const commandClientId: number = args[0];
+      if (commandClientId in this.commandInterfaceList) {
+        this.commandInterfaceList[commandClientId].onDataReceived(args[1]);
+      }
+    });
   }
 }
 
@@ -37,10 +43,13 @@ export class CommandInterface {
   public screenMessages: string[] = [];
 
   private clientId: number;
-  private dataReceivedCallback: (data: CommandClientData) => void;
+  private dataStream: EventEmitter = new EventEmitter();
 
   constructor(clientId: number) {
     this.clientId = clientId;
+    this.dataStream.on('commandClientData', (data: CommandClientData) => {
+      this.screenMessages.push(data.message);
+    });
   }
 
   public getClientId(): number {
@@ -48,13 +57,10 @@ export class CommandInterface {
   }
 
   public onDataReceived(data: CommandClientData) {
-    this.screenMessages.push(data.message);
-    if (this.dataReceivedCallback) {
-      this.dataReceivedCallback(data);
-    }
+    this.dataStream.emit('commandClientData', data);
   }
 
-  public onCommandEntered(command: string) {
+  private onCommandEntered(command: string) {
     const commandScreenMessage = this.subCommandChainDescriptor + '> ' + command;
     this.screenMessages.push(commandScreenMessage);
   }
@@ -68,6 +74,6 @@ export class CommandInterface {
   }
 
   public subscribe(callback: (data: CommandClientData) => void) {
-    this.dataReceivedCallback = callback;
+    this.dataStream.on('commandClientData', callback);
   }
 }
