@@ -1,5 +1,5 @@
-export type CommandClientData = {
-    message: string;
+export class CommandClientData {
+    message: string = '';
 };
 
 export class CommandClientState {
@@ -10,7 +10,7 @@ export class CommandClientState {
     }
 
     public getSubCommandChainDescriptor() {
-        return this.subCommandChain.join('>');
+        return this.subCommandChain.join(' > ') + ' >>';
     }
 }
 

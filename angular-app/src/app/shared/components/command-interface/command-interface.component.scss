@@ -1,4 +1,22 @@
-.terminal {
-  background-color: black;
-  color: yellowgreen;
+.commandInterface {
+  width: 100%;
+
+  .messageScreen {
+    width: 100%;
+    height: 300px;
+    overflow-y: scroll;
+    padding: 12px;
+
+    .message {
+      font-family: 'Inconsolata';
+      list-style: none;
+      white-space: pre-wrap;
+      padding: 6px 0;
+    }
+  }
+
+  .commandInputFormField {
+    width: 100%;
+    font-family: 'Inconsolata';
+  }
 }

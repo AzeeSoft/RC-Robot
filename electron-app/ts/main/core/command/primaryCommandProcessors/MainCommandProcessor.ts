@@ -1,6 +1,7 @@
-import { CommandProcessor, InternalCommandCallback } from './CommandProcessor';
-import { Logger } from '../../tools/misc/Logger';
-import { CommandClient } from './CommandClient';
+import { CommandProcessor, CommandCallback } from '../CommandProcessor';
+import { Logger } from '../../../tools/misc/Logger';
+import { CommandClient, CommandClientData } from '../CommandClient';
+import { RobotComponentCommandProcessor } from './RobotComponentCommandProcessor';
 
 export class MainCommandProcessor extends CommandProcessor {
     private static instance: MainCommandProcessor = null;
@@ -11,6 +12,10 @@ export class MainCommandProcessor extends CommandProcessor {
         }
 
         return MainCommandProcessor.instance;
+    }
+
+    private constructor() {
+        super();
     }
 
     protected initInternalCommands(): void {

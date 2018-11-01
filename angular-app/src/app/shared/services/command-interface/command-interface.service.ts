@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ipcRenderer, ipcMain } from 'electron';
-import { Logger } from 'src/tools/misc/Logger';
-import { Observable, } from 'rxjs';
+import { Observable } from 'rxjs';
 import { EventEmitter } from 'events';
 
 @Injectable({
@@ -34,20 +33,20 @@ export class CommandInterfaceService {
   }
 }
 
-export interface CommandClientData {
-  message: string;
+export class CommandClientData {
+  message = '';
 }
 
 export class CommandInterface {
-  public subCommandChainDescriptor = '';
+  public subCommandChainDescriptor = ' >>';
   public screenMessages: string[] = [];
 
   private clientId: number;
-  private dataStream: EventEmitter = new EventEmitter();
+  private interfaceStream: EventEmitter = new EventEmitter();
 
   constructor(clientId: number) {
     this.clientId = clientId;
-    this.dataStream.on('commandClientData', (data: CommandClientData) => {
+    this.interfaceStream.on('commandClientData', (data: CommandClientData) => {
       this.screenMessages.push(data.message);
     });
   }
@@ -57,11 +56,11 @@ export class CommandInterface {
   }
 
   public onDataReceived(data: CommandClientData) {
-    this.dataStream.emit('commandClientData', data);
+    this.interfaceStream.emit('commandClientData', data);
   }
 
   private onCommandEntered(command: string) {
-    const commandScreenMessage = this.subCommandChainDescriptor + '> ' + command;
+    const commandScreenMessage = `[${new Date().toLocaleTimeString('en-US', {})}] ${this.subCommandChainDescriptor} ${command}`;
     this.screenMessages.push(commandScreenMessage);
   }
 
@@ -73,7 +72,7 @@ export class CommandInterface {
     }
   }
 
-  public subscribe(callback: (data: CommandClientData) => void) {
-    this.dataStream.on('commandClientData', callback);
+  public listenToCommandClientData(callback: (data: CommandClientData) => void) {
+    this.interfaceStream.on('commandClientData', callback);
   }
 }

@@ -1,13 +1,13 @@
-<div>
-  <mat-list class="">
-    <mat-list-item *ngFor="let screenMessage of this.commandInterface.screenMessages">
-      {{screenMessage}}
-    </mat-list-item>
-  </mat-list>
+<div class="commandInterface">
+  <ul class="messageScreen" #messageScreen>
+    <li class="message" *ngFor="let screenMessage of this.commandInterface.screenMessages">
+      <span>{{screenMessage}}</span>
+    </li>
+  </ul>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Enter command here</mat-label>
+  <mat-form-field appearance="outline" class="commandInputFormField">
+    <mat-label>{{this.commandInterface.subCommandChainDescriptor}}</mat-label>
     <input matInput placeholder="Enter command here" [(ngModel)]="command" (keyup)="onInputTyped($event)">
-    <mat-hint>Hint</mat-hint>
+    <mat-hint>Type ? for help</mat-hint>
   </mat-form-field>
 </div>

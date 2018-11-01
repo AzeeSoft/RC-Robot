@@ -3,11 +3,12 @@ import { app, ipcMain, ipcRenderer, remote, WebContents, Event } from 'electron'
 import { WindowController } from '../../windows/WindowController';
 import { KeyboardEventController } from '../../tools/input/KeyboardEventController';
 import { appConfig, AppMode } from '../../tools/config/AppConfig';
-import { MainCommandProcessor } from '../command/MainCommandProcessor';
+import { MainCommandProcessor } from '../command/primaryCommandProcessors/MainCommandProcessor';
 import { CommandClient, CommandClientData } from '../command/CommandClient';
 
 import Serialport = require('serialport');
-import { Logger } from '../../tools/misc/Logger';
+import { RendererCommandClient } from '../command/commandClients/RendererCommandClient';
+import { RootDataInitializer } from './RootDataInitializer';
 
 export class AppInstance {
     private static instance = null;
@@ -37,6 +38,8 @@ export class AppInstance {
         app.on('window-all-closed', () => {
             app.quit();
         });
+
+        RootDataInitializer.getInstance().init();
 
         this.setupRenderer();
 
@@ -111,27 +114,5 @@ export class AppInstance {
                 MainCommandProcessor.getInstance().processCommand(rendererCommandClient, command);
             }
         });
-    }
-}
-
-class RendererCommandClient extends CommandClient {
-    sender: WebContents;
-    pendingRendererEvent: Event;
-
-    constructor(sender: WebContents) {
-        super();
-        this.sender = sender;
-    }
-
-    public setPendingRendererEvent(e: Event) {
-        this.pendingRendererEvent = e;
-    }
-
-    public sendData(data: CommandClientData) {
-        this.sender.send('commandClientData', this.getId(), data);
-    }
-
-    public returnControl() {
-        this.pendingRendererEvent.returnValue = this.getState().getSubCommandChainDescriptor();
     }
 }

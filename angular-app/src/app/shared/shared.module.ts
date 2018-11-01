@@ -10,7 +10,7 @@ import { FormsModule } from '@angular/forms';
     MaterialModule,
     FormsModule
   ],
-  declarations: [CommandInterfaceComponent],
+  declarations: [CommandInterfaceComponent, ],
   exports: [CommandInterfaceComponent],
 })
 export class SharedModule {}

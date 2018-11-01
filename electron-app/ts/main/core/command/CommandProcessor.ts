@@ -1,19 +1,27 @@
 import { Logger } from '../../tools/misc/Logger';
-import { CommandClient } from './CommandClient';
+import { CommandClient, CommandClientData } from './CommandClient';
+import { RobotComponentCommandProcessor } from './primaryCommandProcessors/RobotComponentCommandProcessor';
+import { MainCommandProcessor } from './primaryCommandProcessors/MainCommandProcessor';
 
 export type CommandFormat = {
     commandName: string;
     args: string[];
 };
 
-export type InternalCommandCallback = (commandClient: CommandClient, ...args) => void;
+export type CommandCallback = (commandClient: CommandClient, ...args) => void;
 
 export abstract class CommandProcessor {
-    private internalCommandProcessors: InternalCommandCallback[] = [];
+    private reservedCommandProcessors: CommandCallback[] = [];
+
+    private internalCommandProcessors: CommandCallback[] = [];
     private externalCommandProcessors: CommandProcessor[] = [];
 
     constructor() {
         this.initInternalCommands();
+
+        this.addReservedCommand('?', this.showHelp);
+        this.addReservedCommand('help', this.showHelp);
+        this.addReservedCommand('exit', this.exitSubChain);
     }
 
     processCommand(commandClient: CommandClient, command: string): void {
@@ -27,7 +35,7 @@ export abstract class CommandProcessor {
                 let subCommand = commandClientState.subCommandChain[i];
 
                 if (selectedProcessor.isExternalCommand(subCommand)) {
-                    selectedProcessor = selectedProcessor[command];
+                    selectedProcessor = selectedProcessor.externalCommandProcessors[subCommand];
                 } else {
                     selectedProcessor = this;
                     break;
@@ -40,8 +48,20 @@ export abstract class CommandProcessor {
         let isSearchingForCommand = true;
         let pendingSubCommands: string[] = [];
         while (isSearchingForCommand) {
-            if (selectedProcessor.isInternalCommand(formattedCommand.commandName)) {
-                selectedProcessor.internalCommandProcessors[formattedCommand.commandName](commandClient, formattedCommand.args);
+            if (selectedProcessor.isReservedCommand(formattedCommand.commandName)) {
+                selectedProcessor.reservedCommandProcessors[formattedCommand.commandName].call(
+                    selectedProcessor,
+                    commandClient,
+                    formattedCommand.args
+                );
+
+                isSearchingForCommand = false;
+            } else if (selectedProcessor.isInternalCommand(formattedCommand.commandName)) {
+                selectedProcessor.internalCommandProcessors[formattedCommand.commandName].call(
+                    selectedProcessor,
+                    commandClient,
+                    formattedCommand.args
+                );
 
                 isSearchingForCommand = false;
             } else if (selectedProcessor.isExternalCommand(formattedCommand.commandName)) {
@@ -63,12 +83,21 @@ export abstract class CommandProcessor {
                     formattedCommand.commandName = formattedCommand.args.shift();
                 }
             } else {
-                // TODO: Send 'command not found' message.
+                commandClient.sendData({
+                    message: `Invalid command: ${command}`,
+                });
                 isSearchingForCommand = false;
             }
         }
 
         commandClient.returnControl();
+    }
+
+    isReservedCommand(commandName: string): boolean {
+        return (
+            commandName in this.reservedCommandProcessors &&
+            this.reservedCommandProcessors[commandName] != null
+        );
     }
 
     isInternalCommand(commandName: string): boolean {
@@ -102,7 +131,15 @@ export abstract class CommandProcessor {
         return formattedCommand;
     }
 
-    protected addInternalCommand(commandName: string, processorCallback: InternalCommandCallback) {
+    private addReservedCommand(commandName: string, processorCallback: CommandCallback) {
+        if (!this.isReservedCommand(commandName)) {
+            this.reservedCommandProcessors[commandName] = processorCallback;
+        } else {
+            Logger.debug('Reserved Command exists: ' + commandName);
+        }
+    }
+
+    protected addInternalCommand(commandName: string, processorCallback: CommandCallback) {
         if (!this.isInternalCommand(commandName)) {
             this.internalCommandProcessors[commandName] = processorCallback;
         } else {
@@ -110,11 +147,57 @@ export abstract class CommandProcessor {
         }
     }
 
-    protected addExternalCommand(commandName: string, commandProcessor: CommandProcessor) {
+    public addExternalCommand(commandName: string, commandProcessor: CommandProcessor) {
         if (!this.isExternalCommand(commandName)) {
             this.externalCommandProcessors[commandName] = commandProcessor;
         } else {
             Logger.debug('External Command exists: ' + commandName);
+        }
+    }
+
+    public getInternalCommands(): string[] {
+        let commands = [...Object.keys(this.internalCommandProcessors)];
+        return commands;
+    }
+
+    public getExternalCommands(): string[] {
+        return [...Object.keys(this.externalCommandProcessors)];
+    }
+
+    public getReservedCommands(): string[] {
+        return [...Object.keys(this.reservedCommandProcessors)];
+    }
+
+    public getSupportedCommands(): string[] {
+        return [
+            ...this.getInternalCommands(),
+            ...this.getExternalCommands(),
+            ...this.getReservedCommands(),
+        ];
+    }
+
+    protected showHelp(commandClient: CommandClient, ...args) {
+        const data: CommandClientData = new CommandClientData();
+
+        let commands = '';
+        this.getSupportedCommands().forEach(command => {
+            commands += `- ${command}\n`;
+        });
+
+        data.message =
+            `Help\n` + `=====\n` + `You can use the following commands:\n` + `${commands}`;
+
+        commandClient.sendData(data);
+    }
+
+    private exitSubChain(commandClient: CommandClient, ...args) {
+        let commandClientState = commandClient.getState();
+        if (commandClientState.subCommandChain.length > 0) {
+            commandClientState.subCommandChain.pop();
+        } else {
+            commandClient.sendData({
+                message: 'Cannot exit from root!',
+            });
         }
     }
 
